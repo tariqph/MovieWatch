@@ -21,7 +21,7 @@ class loginViewState extends State<loginView> {
   final TextEditingController passwordController = TextEditingController();
 
   bool _loading = false;
-  PersistentBottomSheetController _sheetController;
+
 
   @override
   Widget build(BuildContext context) {

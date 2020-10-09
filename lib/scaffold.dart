@@ -1,10 +1,7 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:watchmovie/dismissibleCard.dart';
 import 'package:watchmovie/sideMenu.dart';
-import 'movieCard.dart';
 import 'dataStruct.dart';
 import 'sideMenu.dart';
 import 'circleImage.dart';

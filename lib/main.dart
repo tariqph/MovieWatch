@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:watchmovie/loginView.dart';
 import 'package:watchmovie/singUp.dart';
 import 'package:watchmovie/splashPage.dart';

@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
+import 'package:flutter/services.dart';
 import 'homeView.dart';
 
 // ignore: camel_case_types
@@ -16,9 +16,10 @@ class signInView extends StatefulWidget {
 // ignore: camel_case_types
 class signUpViewState extends State<signInView> {
   final _signInFormKey = GlobalKey<FormState>();
-  PersistentBottomSheetController _sheetController;
   String errorMsg = "";
   bool _loading = false;
+
+  bool usernameExist = false;
 
   TextEditingController fullNameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
@@ -53,11 +54,42 @@ class signUpViewState extends State<signInView> {
     }
   }
 
+  String usernameValidator(String value) {
+
+     if (usernameExist) {
+
+       return 'Username already exists';
+     }
+     else {
+       print("etf111");
+       return null;
+
+   }
+
+  }
+
+
+  Future checkUser() async {
+    final QuerySnapshot result = await Firestore.instance
+        .collection('Users')
+        .where('username', isEqualTo: usernameController.text)
+        .limit(1)
+        .getDocuments();
+    final List<DocumentSnapshot> documents = result.documents;
+    return documents.length == 1;
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Container(
+        child: _loading == true
+            ? CircularProgressIndicator(
+          valueColor: new AlwaysStoppedAnimation<Color>(
+              Colors.blue),
+        )
+        :Container(
           padding: EdgeInsets.all(20),
           child: Form(
             //autovalidateMode: AutovalidateMode.always,
@@ -81,7 +113,7 @@ class signUpViewState extends State<signInView> {
                     height: 10,
                   ),
                   customFormField(
-                      "Username", false, usernameController, fullNameValidator),
+                      "Username", false, usernameController, usernameValidator),
                   SizedBox(
                     height: 10,
                   ),
@@ -113,8 +145,18 @@ class signUpViewState extends State<signInView> {
                             child: Text("Register"),
                             color: Colors.black,
                             textColor: Colors.white,
-                            onPressed: () {
+                            onPressed: () async{
+                              var response = await checkUser();
+                              print(response);
+                              setState(() {
+                                this.usernameExist = response;
+                              });
+
                               if (_signInFormKey.currentState.validate()) {
+                                HapticFeedback.lightImpact();
+                                setState(() {
+                                  _loading = true;
+                                });
                                 _validateSignIn();
                               }
                             }),
@@ -181,6 +223,10 @@ class signUpViewState extends State<signInView> {
           passwordController.clear(),
           conPasswordController.clear()
         }));
+
+       setState(() {
+         _loading = false;
+       });
             /*.catchError((err) => print(err)))
             .catchError((err) {
 
@@ -234,7 +280,11 @@ class signUpViewState extends State<signInView> {
       catch (error) {
         switch (error.code) {
           case "ERROR_EMAIL_ALREADY_IN_USE":
-            { showDialog(
+            {
+              setState(() {
+                _loading = false;
+              });
+              showDialog(
                 context: context,
                 builder: (BuildContext context) {
                   return AlertDialog(
@@ -254,10 +304,10 @@ class signUpViewState extends State<signInView> {
             break;
           case "ERROR_WEAK_PASSWORD":
             {
-              _sheetController.setState(() {
-                errorMsg = "The password must be 6 characters long or more.";
+              setState(() {
                 _loading = false;
               });
+
               showDialog(
                   context: context,
                   builder: (BuildContext context) {
@@ -271,8 +321,8 @@ class signUpViewState extends State<signInView> {
             break;
           default:
             {
-              _sheetController.setState(() {
-                errorMsg = "";
+              setState(() {
+                _loading = false;
               });
             }
         }
@@ -297,6 +347,10 @@ class signUpViewState extends State<signInView> {
           });
     }
   }
+
+
+
+
 
 }
 
