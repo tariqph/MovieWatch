@@ -1,21 +1,64 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:watchmovie/circleImage.dart';
+import 'package:watchmovie/loginView.dart';
 
 // ignore: camel_case_types
 class sideMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    Future<void> _signOut() async {
+
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text("Logout"),
+                content: Text("Are you sure? "),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text("Yes"),
+                    onPressed: () {
+                      try {
+               FirebaseAuth.instance.signOut().then((_) {
+              Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => loginView()),
+              (_) => false);
+              });
+              } catch (e) {
+              print(e); // TODO: show dialog with error
+              }
+                    },
+                  ),
+                  FlatButton(
+                    child: Text("No"),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  )
+                ],
+              );
+            });
+
+
+    }
+
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
           DrawerHeader(
-            child: Text(
-              'Side menu',
-              style: TextStyle(color: Colors.white, fontSize: 25),
-            ),
+            child: Column(children: [
+              Text(
+                'Side menu',
+                style: TextStyle(color: Colors.white, fontSize: 25),
+              ),
+              circleImageAsset(70, "assets/images/netflix.png")
+            ]),
             decoration: BoxDecoration(
-                color: Colors.indigo[900],
-                /*image: DecorationImage(
+              color: Colors.indigo[900],
+              /*image: DecorationImage(
                     fit: BoxFit.fill,
                     image: AssetImage('assets/images/cover.jpg')
                 )*/
@@ -44,7 +87,9 @@ class sideMenu extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.exit_to_app),
             title: Text('Logout'),
-            onTap: () => {Navigator.of(context).pop()},
+            onTap: () {
+              _signOut();
+            },
           ),
         ],
       ),
