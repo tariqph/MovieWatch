@@ -11,3 +11,4 @@ class MovieData {
       this.title, this.dur, this.year, this.genre, this.synopsis, this.image);
 
 }
+

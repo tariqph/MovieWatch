@@ -41,14 +41,14 @@ class dismissibleCardState extends State<dismissibleCard> {
               child: Icon(
                 Icons.favorite,
                 color: Colors.green,
-                size: 100,
+                size: 50,
               )),
           secondaryBackground: Container(
               alignment: Alignment(0.9, -0.5),
               child: Icon(
-                Icons.cancel_outlined,
+                Icons.cancel_rounded,
                 color: Colors.red,
-                size: 100,
+                size: 50,
               )),
           key: UniqueKey(),
           child:

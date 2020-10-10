@@ -12,7 +12,6 @@ void main() {
   runApp(MainApp());
 }
 
-
 class MainApp extends StatelessWidget {
 
 // This widget is the root of your application.

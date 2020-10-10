@@ -16,6 +16,7 @@ class loginView extends StatefulWidget {
 
 // ignore: camel_case_types
 class loginViewState extends State<loginView> {
+
   final _loginFormKey = GlobalKey<FormState>();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();

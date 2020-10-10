@@ -205,7 +205,7 @@ class signUpViewState extends State<signInView> {
             password: passwordController.text)
             .then((currentUser) => Firestore.instance
             .collection("Users")
-            .document()
+            .document(currentUser.user.uid)
             .setData({
           "fullname": fullNameController.text,
           "username": usernameController.text,
