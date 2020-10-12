@@ -9,6 +9,8 @@ import 'dataStruct.dart';
 // ignore: camel_case_types
 class homeView extends StatelessWidget {
 
+  final username;
+  homeView(this.username);
   @override
   Widget build(BuildContext context) {
     final List<MovieData> movies = List<MovieData>(6);
@@ -25,12 +27,14 @@ class homeView extends StatelessWidget {
     movies[5] = MovieData('title1', 'dur', 'year', 'genre', 'synopsis',
         'https://img1.hotstarext.com/image/upload/f_auto,t_web_hs_1_5x/sources/r1/cms/prod/7436/747436-h');
 
-    return MaterialApp(
+    return /*MaterialApp(
       title: 'New',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: CustomScaffold(movies),);
+      home:*/
+      CustomScaffold(movies, username);
+
   }
 }
 

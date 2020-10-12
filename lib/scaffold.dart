@@ -8,8 +8,9 @@ import 'circleImage.dart';
 
 class CustomScaffold extends StatelessWidget {
   final List<MovieData> movies;
+  final username;
 
-  CustomScaffold(this.movies);
+  CustomScaffold(this.movies,this.username);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,40 +20,65 @@ class CustomScaffold extends StatelessWidget {
       //top Navigation bar
       appBar: AppBar(
         //leading: Icon(Icons.menu),
-        title: Text('WatchParty'),
+        title: Text(username),
         actions: [
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 30),
-            child: Icon(Icons.filter_alt_sharp),
+            child: Row(
+              children: [
+                IconButton(
+                  icon: Icon(
+                    Icons.notifications_active,
+                    color: Colors.white,
+                  ),
+                  //tooltip: 'Increase volume by 10',
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/friendrequest');
+                  },
+                ),
+                IconButton(
+                  icon: Icon(Icons.face),
+                  //tooltip: 'Increase volume by 10',
+                  onPressed: () {},
+                )
+              ],
+            ),
           ),
         ],
-        backgroundColor: Colors.indigo,
+        backgroundColor: Colors.indigo[900],
       ),
 
-      body: dismissibleCard(movies), //body with the Dismissible Card
+      body: dismissibleCard(movies),
+      //body with the Dismissible Card
 
       //bottom Navigation bar
-      bottomNavigationBar: ClipRRect(
-        borderRadius: BorderRadius.circular(50),
-        child: BottomAppBar(
-          //clipBehavior: Clip.hardEdge,
-          child: Row(
+      bottomNavigationBar:
+          /*ClipRRect(
+       // borderRadius: BorderRadius.circular(50),
+        child: */
+          BottomAppBar(
+        elevation: 0,
+        color: Colors.indigo[50],
+        //clipBehavior: Clip.hardEdge,
+        child: Column(mainAxisSize: MainAxisSize.min, children: [
+          Row(
             children: [
+              Spacer(),
               Container(
                 height: 60,
-                color: Colors.indigo[700],
-                width: ((MediaQuery.of(context).size.width)/2)-1,
-                child: OutlineButton.icon(
-                  textColor: Colors.white,
-                  highlightedBorderColor: Colors.black.withOpacity(0.12),
-                  onPressed: () {
-                    // Respond to button press
-                  },
-                  icon: Icon(Icons.party_mode, size: 30),
-                  label: Text("CREATE PARTY   "),
-                ),
+                //color: Colors.indigo[700],
+                width: ((MediaQuery.of(context).size.width) / 2) - 10,
+                child: RaisedButton(
+                   // elevation: 50,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
+                    child: Text("Throw PARTY"),
+                    color: Colors.indigo[900],
+                    textColor: Colors.white,
+                    onPressed: () {}),
               ),
-              Spacer(),
+              /* Spacer(),
               SizedBox(
                 width: 0.5,
                 height: 50,
@@ -60,26 +86,31 @@ class CustomScaffold extends StatelessWidget {
                   decoration: const BoxDecoration(color: Colors.grey),
                 ),
               ),
+              Spacer()*/
               Spacer(),
               Container(
                 height: 60,
-                color: Colors.indigo[700],
-                width: ((MediaQuery.of(context).size.width)/2)-1,
-                child: OutlineButton.icon(
-                  textColor: CupertinoColors.white,
-                  highlightedBorderColor: Colors.black.withOpacity(0.12),
-                  onPressed: () {
-                    // Respond to button press
-                  },
-                  icon: Icon(Icons.add, size: 30),
-                  label: Text("     JOIN PARTY  "),
-                ),
+                // color: Colors.indigo[700],
+                width: ((MediaQuery.of(context).size.width) / 2) - 10,
+                child: RaisedButton(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
+                    child: Text("Join PARTY"),
+                    color: Colors.indigo[900],
+                    textColor: Colors.white,
+                    onPressed: () {}),
               ),
+              Spacer()
             ],
           ),
-        ),
+          SizedBox(
+            height: 10,
+          )
+        ]),
+        //),
       ),
-      floatingActionButton: Container(
+      /* floatingActionButton: Container(
         width: 80,
         height: 80,
 
@@ -91,8 +122,8 @@ class CustomScaffold extends StatelessWidget {
             splashColor: Colors.yellow[900],
             child: circleImageAsset(75, "assets/images/addfriend.png"),
             onPressed: () {}),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      ),*/
+      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }

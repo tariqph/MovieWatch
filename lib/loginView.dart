@@ -126,14 +126,14 @@ class loginViewState extends State<loginView> {
             email: emailController.text,
             password: passwordController.text)
             .then((currentUser) => Firestore.instance
-            .collection("users")
-            .document()
+            .collection("Users")
+            .document(currentUser.user.uid)
             .get()
-            ..then((result) => {
+            .then((result) => {
               Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => homeView()),
+                      builder: (context) => homeView(result.data['username'])),
                       (_) => false),
               emailController.clear(),
               passwordController.clear(),

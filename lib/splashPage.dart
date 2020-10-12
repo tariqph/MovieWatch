@@ -13,6 +13,7 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
+
   @override
   initState() {
     FirebaseAuth.instance
@@ -26,14 +27,14 @@ class _SplashPageState extends State<SplashPage> {
       else
         {
           Firestore.instance
-              .collection("users")
+              .collection("Users")
               .document(currentUser.uid)
               .get()
-              .then((DocumentSnapshot result) =>
+              .then((DocumentSnapshot s) =>
               Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => homeView(
+                      builder: (context) => homeView(s.data['username']
                       ))))
               .catchError((err) => print(err))
         }

@@ -26,7 +26,7 @@ class MovieCard extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
         ),
-        elevation: 8,
+        elevation: 2,
         //child: Expanded(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,

@@ -215,7 +215,7 @@ class signUpViewState extends State<signInView> {
           Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
-                  builder: (context) => homeView()),
+                  builder: (context) => homeView(usernameController.text)),
                   (_) => false),
           fullNameController.clear(),
           usernameController.clear(),
