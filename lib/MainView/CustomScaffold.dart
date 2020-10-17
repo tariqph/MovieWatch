@@ -46,7 +46,10 @@ class CustomScaffold extends StatelessWidget {
                 IconButton(
                   icon: Icon(Icons.face),
                   //tooltip: 'Increase volume by 10',
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/friendtabs',
+                        arguments: username);
+                  },
                 )
               ],
             ),

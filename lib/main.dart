@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
+import 'FriendViews/TabView.dart';
 import 'file:///C:/Users/naray/AndroidStudioProjects/watchmovie/lib/FriendViews/friendRequest.dart';
 import 'package:watchmovie/Authentication/loginView.dart';
 import 'package:watchmovie/Authentication/singUp.dart';
@@ -22,7 +23,7 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
-          primarySwatch: Colors.blue,
+          primarySwatch: Colors.indigo,
         ),
         home: SplashPage(),
         routes: <String, WidgetBuilder>{
@@ -31,6 +32,7 @@ class MainApp extends StatelessWidget {
           '/login': (BuildContext context) => loginView(),
           '/signup': (BuildContext context) => signInView(),
           '/friendrequest' :(BuildContext context) => friendRequest(),
+          '/friendtabs' :(BuildContext context) => TabView(),
 
         });
   }
