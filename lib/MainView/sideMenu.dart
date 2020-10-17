@@ -1,47 +1,46 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:watchmovie/circleImage.dart';
-import 'package:watchmovie/loginView.dart';
+import 'package:watchmovie/Authentication/loginView.dart';
+import 'package:watchmovie/Misc_widgets/circleImage.dart';
+
 
 // ignore: camel_case_types
 class sideMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    Future<void> _signOut() async {
-
-        showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text("Logout"),
-                content: Text("Are you sure? "),
-                actions: <Widget>[
-                  FlatButton(
-                    child: Text("Yes"),
-                    onPressed: () {
-                      try {
-               FirebaseAuth.instance.signOut().then((_) {
-              Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (context) => loginView()),
-              (_) => false);
-              });
-              } catch (e) {
-              print(e); // TODO: show dialog with error
-              }
-                    },
-                  ),
-                  FlatButton(
-                    child: Text("No"),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  )
-                ],
-              );
-            });
-
-
+    Future<void> _signOut()  async{
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Logout"),
+              content: Text("Are you sure? "),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text("Yes"),
+                  onPressed: () async{
+                    try {
+                      await FirebaseAuth.instance.signOut().then((_) {
+                        Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => loginView()),
+                            (_) => false);
+                      });
+                    } catch (e) {
+                      print(e); //
+                    }
+                  },
+                ),
+                FlatButton(
+                  child: Text("No"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
+            );
+          });
     }
 
     return Drawer(

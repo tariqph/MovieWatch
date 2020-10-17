@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:watchmovie/circleImage.dart';
+import 'package:watchmovie/Misc_widgets/circleImage.dart';
 
 class MovieCard extends StatelessWidget {
   final title, dur, year, genre, synopsis;
@@ -29,6 +29,7 @@ class MovieCard extends StatelessWidget {
         elevation: 2,
         //child: Expanded(
         child: Column(
+          // mainAxisSize: MainAxisSize.max, //added
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -49,25 +50,26 @@ class MovieCard extends StatelessWidget {
               height: 2,
               width: 30,
             ),
-            /*Container(
+            Container(
+              //uncommented
 
-              height: 250,
+              height: 230,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                fit: BoxFit.fill,
+                  fit: BoxFit.fill,
                   image: NetworkImage(image),
                 ),
               ),
-            ),*/
-          //  SizedBox.expand(,
-            FittedBox(
+            ),
+            //  SizedBox.expand(,
+            /*    FittedBox(
                fit: BoxFit.fill,
                 child:
                 Image.network(
                   image,
                 ),
-      ),
-           // ),
+      ),*/
+            // ),
             SizedBox(
               height: 30,
               width: 30,
@@ -81,11 +83,12 @@ class MovieCard extends StatelessWidget {
                 child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                  Image(
+                  Flexible(
+                      child: Image(
                     image: AssetImage("assets/images/year.png"),
                     height: 20,
                     width: 20,
-                  ),
+                  )),
                   Flexible(
                       flex: 1,
                       child: Text('$year',
@@ -112,11 +115,12 @@ class MovieCard extends StatelessWidget {
                       decoration: const BoxDecoration(color: Colors.grey),
                     ),
                   ),
-                  Image(
+                  Flexible(
+                      child: Image(
                     image: AssetImage("assets/images/duration.png"),
                     height: 20,
                     width: 20,
-                  ),
+                  )),
                   Flexible(
                       flex: 1,
                       child: Text('$dur',

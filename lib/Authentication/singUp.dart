@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
-import 'homeView.dart';
+import '../MainView/homeView.dart';
 
 // ignore: camel_case_types
 class signInView extends StatefulWidget {
@@ -15,18 +15,22 @@ class signInView extends StatefulWidget {
 
 // ignore: camel_case_types
 class signUpViewState extends State<signInView> {
+  //Widget for the login view
   final _signInFormKey = GlobalKey<FormState>();
   String errorMsg = "";
-  bool _loading = false;
+  bool _loading = false; // bool variable for loading of signup status
 
   bool usernameExist = false;
 
+  //controllers to get data from textformfields
   TextEditingController fullNameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController conPasswordController = TextEditingController();
 
+
+//Validation functions for the Textformfield Widgets
   String emailValidator(String value) {
     Pattern pattern =
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
@@ -70,6 +74,11 @@ class signUpViewState extends State<signInView> {
 
 
   Future checkUser() async {
+    /*
+    Function to check if the username exists which returns a future bool
+    value as true if the document exits.
+    This function is invoked before the validation of the forms onPressed of the signup button
+     */
     final QuerySnapshot result = await Firestore.instance
         .collection('Users')
         .where('username', isEqualTo: usernameController.text)
@@ -146,10 +155,10 @@ class signUpViewState extends State<signInView> {
                             color: Colors.black,
                             textColor: Colors.white,
                             onPressed: () async{
-                              var response = await checkUser();
+                              var response = await checkUser(); //checking if username exists
                               print(response);
                               setState(() {
-                                this.usernameExist = response;
+                                this.usernameExist = response; //sets the usernameExist variable according to the response
                               });
 
                               if (_signInFormKey.currentState.validate()) {
@@ -227,57 +236,9 @@ class signUpViewState extends State<signInView> {
        setState(() {
          _loading = false;
        });
-            /*.catchError((err) => print(err)))
-            .catchError((err) {
 
-         switch (err.code) {
-           case "ERROR_EMAIL_ALREADY_IN_USE":
-             { showDialog(
-                 context: context,
-                 builder: (BuildContext context) {
-                   return AlertDialog(
-                     title: Text("Error"),
-                     content: Text("The email is already in use!"),
-                     actions: <Widget>[
-                       FlatButton(
-                         child: Text("Close"),
-                         onPressed: () {
-                           Navigator.of(context).pop();
-                         },
-                       )
-                     ],
-                   );
-                 });
-             }
-             break;
-           case "ERROR_WEAK_PASSWORD":
-             {
-               _sheetController.setState(() {
-                 errorMsg = "The password must be 6 characters long or more.";
-                 _loading = false;
-               });
-               showDialog(
-                   context: context,
-                   builder: (BuildContext context) {
-                     return AlertDialog(
-                       content: Container(
-                         child: Text(errorMsg),
-                       ),
-                     );
-                   });
-             }
-             break;
-           default:
-             {
-               _sheetController.setState(() {
-                 errorMsg = "";
-               });
-             }
-         }
-       });
-*/
       }
-      catch (error) {
+      catch (error) { //catching errors which prompts a dialog box according to the case
         switch (error.code) {
           case "ERROR_EMAIL_ALREADY_IN_USE":
             {
@@ -347,11 +308,6 @@ class signUpViewState extends State<signInView> {
           });
     }
   }
-
-
-
-
-
 }
 
 // ignore: camel_case_types
@@ -388,3 +344,54 @@ class customFormField extends StatelessWidget {
     );
   }
 }
+
+
+/*.catchError((err) => print(err)))
+            .catchError((err) {
+
+         switch (err.code) {
+           case "ERROR_EMAIL_ALREADY_IN_USE":
+             { showDialog(
+                 context: context,
+                 builder: (BuildContext context) {
+                   return AlertDialog(
+                     title: Text("Error"),
+                     content: Text("The email is already in use!"),
+                     actions: <Widget>[
+                       FlatButton(
+                         child: Text("Close"),
+                         onPressed: () {
+                           Navigator.of(context).pop();
+                         },
+                       )
+                     ],
+                   );
+                 });
+             }
+             break;
+           case "ERROR_WEAK_PASSWORD":
+             {
+               _sheetController.setState(() {
+                 errorMsg = "The password must be 6 characters long or more.";
+                 _loading = false;
+               });
+               showDialog(
+                   context: context,
+                   builder: (BuildContext context) {
+                     return AlertDialog(
+                       content: Container(
+                         child: Text(errorMsg),
+                       ),
+                     );
+                   });
+             }
+             break;
+           default:
+             {
+               _sheetController.setState(() {
+                 errorMsg = "";
+               });
+             }
+         }
+       });
+*/

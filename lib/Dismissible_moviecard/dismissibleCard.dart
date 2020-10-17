@@ -3,9 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'movieCard.dart';
-import 'dataStruct.dart';
-
-
+import '../Data_Structures/dataStruct.dart';
 
 // MyApp is a StatefulWidget. This allows updating the state of the
 // widget when an item is removed.

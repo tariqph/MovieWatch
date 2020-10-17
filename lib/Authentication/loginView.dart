@@ -2,8 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:watchmovie/homeView.dart';
 import 'package:flutter/services.dart';
+import 'package:watchmovie/MainView/homeView.dart';
 
 
 // ignore: camel_case_types
@@ -16,12 +16,15 @@ class loginView extends StatefulWidget {
 
 // ignore: camel_case_types
 class loginViewState extends State<loginView> {
+  /*
+  Stateful widget for the login page
+   */
 
   final _loginFormKey = GlobalKey<FormState>();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  bool _loading = false;
+  bool _loading = false; // bool variable to check loading of login status
 
 
   @override
@@ -130,6 +133,8 @@ class loginViewState extends State<loginView> {
             .document(currentUser.user.uid)
             .get()
             .then((result) => {
+         /*Navigator.pushNamedAndRemoveUntil(
+             context,'/home',result.data['username']),*/
               Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(
@@ -149,7 +154,7 @@ class loginViewState extends State<loginView> {
               setState(() {
                 _loading = false;
               });
-              showDialog(
+              showDialog( //Dialog box for when user is not found
                   context: context,
                   builder: (BuildContext context) {
                     return AlertDialog(
@@ -172,7 +177,7 @@ class loginViewState extends State<loginView> {
               setState(() {
                 _loading = false;
               });
-              showDialog(
+              showDialog( //Dialog box for wrong password
                   context: context,
                   builder: (BuildContext context) {
                     return AlertDialog(
@@ -205,7 +210,7 @@ class loginViewState extends State<loginView> {
 
 
 // ignore: camel_case_types
-class customFormField extends StatelessWidget {
+class customFormField extends StatelessWidget { //custom Textformfield for user data
   final txt;
   final bool pwd;
   final TextEditingController input;

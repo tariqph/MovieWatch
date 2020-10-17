@@ -1,8 +1,13 @@
 
 import 'package:flutter/cupertino.dart';
 
+/*
+Widget which returns Circular Image of provided size from Network or asset
+ */
+
 // ignore: camel_case_types
 class circleImageNetwork extends StatelessWidget{
+
 
   final double radius;
   final String link;
@@ -45,7 +50,6 @@ class circleImageAsset extends StatelessWidget{
         image: DecorationImage(
             fit: BoxFit.fill,
             image:AssetImage(link)
-
 
         ),
       ),
