@@ -44,6 +44,7 @@ class CustomScaffold extends StatelessWidget {
                   },
                 )*/
                 IconButton(
+                  splashRadius: 25,
                   icon: Icon(Icons.face),
                   //tooltip: 'Increase volume by 10',
                   onPressed: () {
@@ -72,24 +73,28 @@ class CustomScaffold extends StatelessWidget {
         color: Colors.indigo[50],
         //clipBehavior: Clip.hardEdge,
         child: Column(mainAxisSize: MainAxisSize.min, children: [
-          Row(
-            children: [
-              Spacer(),
-              Container(
-                height: 60,
-                //color: Colors.indigo[700],
-                width: ((MediaQuery.of(context).size.width) / 2) - 10,
-                child: RaisedButton(
-                    // elevation: 50,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15.0),
+           Row(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+               Spacer(),
+                Container(
+
+                  height: 60,
+                  //color: Colors.indigo[700],
+                  width: ((MediaQuery.of(context).size.width) / 2) - 10,
+                  child: RaisedButton(
+                       elevation: 10,
+                      shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(15.0),
+                      bottomLeft: Radius.circular(15.0)),
                     ),
-                    child: Text("Throw PARTY"),
-                    color: Colors.indigo[900],
-                    textColor: Colors.white,
-                    onPressed: () {}),
-              ),
-              /* Spacer(),
+                      child: Text("Throw PARTY"),
+                      color: Colors.indigo[900],
+                      textColor: Colors.white,
+                      onPressed: () {}),
+                ),
+                /* Spacer(),
               SizedBox(
                 width: 0.5,
                 height: 50,
@@ -98,23 +103,31 @@ class CustomScaffold extends StatelessWidget {
                 ),
               ),
               Spacer()*/
-              Spacer(),
-              Container(
-                height: 60,
-                // color: Colors.indigo[700],
-                width: ((MediaQuery.of(context).size.width) / 2) - 10,
-                child: RaisedButton(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15.0),
+                //Spacer(),
+                SizedBox(
+                  width: 1,
+                ),
+                Container(
+                  height: 60,
+                  // color: Colors.indigo[700],
+                  width: ((MediaQuery.of(context).size.width) / 2) - 10,
+                  child: RaisedButton(
+                    elevation: 10,
+                      shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(15.0),
+                      bottomRight: Radius.circular(15.0)),
                     ),
-                    child: Text("Join PARTY"),
-                    color: Colors.indigo[900],
-                    textColor: Colors.white,
-                    onPressed: () {}),
-              ),
-              Spacer()
-            ],
-          ),
+
+                      child: Text("Join PARTY"),
+                      color: Colors.indigo[900],
+                      textColor: Colors.white,
+                      onPressed: () {}),
+                ),
+                Spacer()
+              ],
+            ),
+
           SizedBox(
             height: 10,
           )
@@ -160,7 +173,7 @@ class customNotificationState extends State<customNotification> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-        stream: Firestore.instance
+        stream: FirebaseFirestore.instance
             .collection("FriendPairs")
             .where("friend2", isEqualTo: widget.username)
             .snapshots(),
@@ -216,12 +229,20 @@ class customNotificationState extends State<customNotification> {
               future: getData(widget.username),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
-                  //  print(snapshot.data[0].data);
+                  print(snapshot.data[0].get('friend1name'));
                   if (snapshot.data.length > 0) {
+                    String notif;
+                    int len = snapshot.data.length;
+                    if (len > 9) {
+                      notif = "9+";
+                    } else {
+                      notif = snapshot.data.length.toString();
+                    }
+
                     print("here4");
                     return Container(
                       decoration: BoxDecoration(
-                        shape: BoxShape.circle,
+                        shape: BoxShape.rectangle,
                       ),
                       width: 30,
                       height: 30,
@@ -256,7 +277,7 @@ class customNotificationState extends State<customNotification> {
                                 padding: const EdgeInsets.all(0.0),
                                 child: Center(
                                   child: Text(
-                                    snapshot.data.length.toString(),
+                                    notif,
                                     style: TextStyle(fontSize: 10),
                                   ),
                                 ),
@@ -300,7 +321,8 @@ class customNotificationState extends State<customNotification> {
                   }
                 } else {
                   print("here6");
-                  return Container(
+                  return
+                    Container(
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                       ),
@@ -339,13 +361,13 @@ class customNotificationState extends State<customNotification> {
     Function to get the if there are pending friend requests which retrieves
     documents from FriendPair collection and checks if it is empty
  */
-    var wht = await Firestore.instance
+    var wht = await FirebaseFirestore.instance
         .collection("FriendPairs")
         .where("friend2", isEqualTo: widget.username)
         .where("status", isEqualTo: "pending")
-        .getDocuments();
+        .get();
     //print(wht.documents[0].data);
-    return wht.documents;
+    return wht.docs;
   }
 }
 

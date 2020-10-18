@@ -79,12 +79,12 @@ class signUpViewState extends State<signInView> {
     value as true if the document exits.
     This function is invoked before the validation of the forms onPressed of the signup button
      */
-    final QuerySnapshot result = await Firestore.instance
+    final QuerySnapshot result = await FirebaseFirestore.instance
         .collection('Users')
         .where('username', isEqualTo: usernameController.text)
         .limit(1)
-        .getDocuments();
-    final List<DocumentSnapshot> documents = result.documents;
+        .get();
+    final List<DocumentSnapshot> documents = result.docs;
     return documents.length == 1;
   }
 
@@ -207,18 +207,29 @@ class signUpViewState extends State<signInView> {
   void _validateSignIn() async {
     if (passwordController.text ==
         conPasswordController.text) {
+
+     var  array =[];
+
+     for ( int i = 4; i < fullNameController.text.length + 1; i++) {
+       array.add(fullNameController.text.substring(0,i).toLowerCase());
+     }
+     for ( int i = 4; i < usernameController.text.length + 1; i++) {
+       array.add(usernameController.text.substring(0,i).toLowerCase());
+     }
+
       try {
        await FirebaseAuth.instance
             .createUserWithEmailAndPassword(
             email: emailController.text,
             password: passwordController.text)
-            .then((currentUser) => Firestore.instance
+            .then((currentUser) => FirebaseFirestore.instance
             .collection("Users")
-            .document(currentUser.user.uid)
-            .setData({
+            .doc(currentUser.user.uid)
+            .set({
           "fullname": fullNameController.text,
           "username": usernameController.text,
           "email": emailController.text,
+         "searchArray" : array
         })
             .then((result) => {
           Navigator.pushAndRemoveUntil(

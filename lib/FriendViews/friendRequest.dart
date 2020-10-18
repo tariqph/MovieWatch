@@ -23,6 +23,9 @@ class friendRequestState extends State<friendRequest> {
   @override
   Widget build(BuildContext context) {
     final username = ModalRoute.of(context).settings.arguments;
+    print("hh1");
+    print(username);
+
     return FutureBuilder(  //Future builder to builder after the async retrieval of documents
         future: getData(username),
         builder: (context, snapshot) {
@@ -31,7 +34,10 @@ class friendRequestState extends State<friendRequest> {
             //Map<String, dynamic> data = snapshot.data.data();
             var rec = snapshot.data;
             print(rec);
+            print("hh");
             int len = rec.length;
+            print(len);
+            print("jj");
 
             return Scaffold(
               appBar: AppBar(
@@ -44,8 +50,13 @@ class friendRequestState extends State<friendRequest> {
                     return customTile(rec[index], declineRequest,acceptRequest);
                   }),
             );
-          } else {
+          }
+          else {
             return Scaffold(
+              appBar: AppBar(
+                title: Text("Friend Requests"),
+                backgroundColor: Colors.indigo[900],
+              ),
               body: Center(
                   child: CircularProgressIndicator(
                       valueColor:
@@ -55,18 +66,19 @@ class friendRequestState extends State<friendRequest> {
         });
   }
 
-  Future<List<DocumentSnapshot>> getData(String username) async {
+  Future getData(String username) async {
 /*
     Function to get the pending friend requests which retrieves
     documents from FriendPair collection
  */
-    var wht = await Firestore.instance
+    var wht = await FirebaseFirestore.instance
         .collection("FriendPairs")
         .where("friend2", isEqualTo: username)
         .where("status", isEqualTo: "pending")
-        .getDocuments();
-    //print(wht.documents[0].data);
-    return wht.documents;
+        .get();
+    print("herrrr");
+    print(wht.docs[0]);
+    return wht.docs;
   }
 
   void declineRequest(String friend1, String friend2) async {
@@ -74,13 +86,13 @@ class friendRequestState extends State<friendRequest> {
     Function to decline friend request which deletes the FriendPair collection document
     with pending status
      */
-    await Firestore.instance
+    await FirebaseFirestore.instance
         .collection("FriendPairs")
         .where("friend2", isEqualTo: friend2)
         .where("friend1", isEqualTo: friend1)
-        .getDocuments()
+        .get()
         .then((snapshot) {
-      for (DocumentSnapshot ds in snapshot.documents) {
+      for (DocumentSnapshot ds in snapshot.docs) {
         ds.reference.delete();
         setState(() {});
       }
@@ -92,14 +104,14 @@ class friendRequestState extends State<friendRequest> {
     the status in FriendPair collection document and triggers
     a cloud function to append individual Users document
      */
-    await Firestore.instance
+    await FirebaseFirestore.instance
         .collection("FriendPairs")
         .where("friend2", isEqualTo: friend2)
         .where("friend1", isEqualTo: friend1)
-        .getDocuments()
+        .get()
         .then((snapshot) {
-      for (DocumentSnapshot ds in snapshot.documents) {
-        ds.reference.updateData({"status": "active"});
+      for (DocumentSnapshot ds in snapshot.docs) {
+        ds.reference.update({"status": "active"});
         setState(() {});
       }
     }).catchError((onError) => print(onError));
@@ -122,7 +134,7 @@ class customTile extends StatelessWidget {
     return Column(children: [
       ListTile(
         leading: FlutterLogo(),
-        title: Text(name.data['friend1name']),
+        title: Text(name.get('friend1name')),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -134,7 +146,7 @@ class customTile extends StatelessWidget {
                 color: Colors.green[600],
                 textColor: Colors.white,
                 onPressed: () async {
-                  await accept(name.data['friend1'], name.data['friend2']);
+                  await accept(name.get('friend1'), name.get('friend2'));
                 }),
             SizedBox(
               width: 4,
@@ -147,7 +159,7 @@ class customTile extends StatelessWidget {
                 color: Colors.red[600],
                 textColor: Colors.white,
                 onPressed: () async {
-                  await decline(name.data['friend1'], name.data['friend2']);
+                  await decline(name.get('friend1'), name.get('friend2'));
                 })
           ],
         ),

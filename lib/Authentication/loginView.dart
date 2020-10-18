@@ -128,9 +128,9 @@ class loginViewState extends State<loginView> {
             .signInWithEmailAndPassword(
             email: emailController.text,
             password: passwordController.text)
-            .then((currentUser) => Firestore.instance
+            .then((currentUser) => FirebaseFirestore.instance
             .collection("Users")
-            .document(currentUser.user.uid)
+            .doc(currentUser.user.uid)
             .get()
             .then((result) => {
          /*Navigator.pushNamedAndRemoveUntil(
@@ -138,7 +138,7 @@ class loginViewState extends State<loginView> {
               Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => homeView(result.data['username'])),
+                      builder: (context) => homeView(result.data()['username'])),
                       (_) => false),
               emailController.clear(),
               passwordController.clear(),
