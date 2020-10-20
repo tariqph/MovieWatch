@@ -12,3 +12,10 @@ class MovieData {
 
 }
 
+class UserData{
+  var fullname, email, username;
+
+  UserData(this.fullname, this.email, this.username);
+
+
+}

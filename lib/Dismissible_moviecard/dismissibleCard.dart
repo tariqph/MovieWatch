@@ -21,9 +21,32 @@ class dismissibleCard extends StatefulWidget {
 }
 
 // ignore: camel_case_types
-class dismissibleCardState extends State<dismissibleCard> {
+class dismissibleCardState extends State<dismissibleCard> with TickerProviderStateMixin{
   int index = 0;
 
+  //here to
+  /*AnimationController _controller;
+  Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(seconds: 2),
+      vsync: this,
+    )..reset();
+    _animation = CurvedAnimation(
+      parent: _controller,
+      curve: Curves.fastOutSlowIn,
+    );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+  }*/
+//here
   @override
   Widget build(BuildContext context) {
     //final title = 'Dismissing Items';
@@ -33,7 +56,7 @@ class dismissibleCardState extends State<dismissibleCard> {
 
       //child:Expanded(
 
-      child: Dismissible(
+      child:  Dismissible(
           background: Container(
               alignment: Alignment(-0.9, -0.5),
               child: Icon(
@@ -54,7 +77,9 @@ class dismissibleCardState extends State<dismissibleCard> {
             SizedBox(
               height: 100,
             ),*/
-          MovieCard(
+   /* ScaleTransition(
+    scale: _animation,
+    child:*/MovieCard(
               widget.movies[index].title,
               widget.movies[index].dur,
               widget.movies[index].year,

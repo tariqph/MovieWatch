@@ -21,6 +21,7 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
+  shimmer: ^1.1.2
   flutter:
     sdk: flutter
   firebase_core: ^0.5.0+1
@@ -56,6 +57,7 @@ flutter:
    - assets/images/netflix.png
    - assets/images/hotstar.png
    - assets/images/primevideo.png
+   - assets/images/avatar.png
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

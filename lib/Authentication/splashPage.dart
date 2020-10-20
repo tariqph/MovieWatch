@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:watchmovie/Data_Structures/dataStruct.dart';
 
-import '../MainView/homeView.dart';
+
 
 class SplashPage extends StatefulWidget {
   SplashPage({Key key}) : super(key: key);
@@ -14,33 +15,34 @@ class SplashPage extends StatefulWidget {
 class _SplashPageState extends State<SplashPage> {
   @override
   initState() {
-    FirebaseAuth.instance
-        .authStateChanges()
-        .listen((User user)  => {
-              if (user == null)
-                {
-                  //print("I'm here")
-                  Navigator.pushReplacementNamed(context, "/login")
-                }
-              else
-                {
-                  // print("I'm here"),
-                  FirebaseFirestore.instance
-                      .collection("Users")
-                      .doc(user.uid)
-                      .get()
-                      .then((DocumentSnapshot s) => {
-                            // print("I'm here1"),
-                            print(s.data()['username']),
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
+    FirebaseAuth.instance.authStateChanges().listen((User user) => {
+          if (user == null)
+            {
+              //print("I'm here")
+              Navigator.pushReplacementNamed(context, "/login")
+            }
+          else
+            {
+              // print("I'm here"),
+              FirebaseFirestore.instance
+                  .collection("Users")
+                  .doc(user.uid)
+                  .get()
+                  .then((DocumentSnapshot s) => {
+                       // print("I'm here111"),
+                        //print(s.data()['username']),
+                        Navigator.pushReplacementNamed(context, '/home',
+                            arguments: UserData(s.get('fullname'), s.get('email'), s.get('username'))
+                           )
+                            /*MaterialPageRoute(
                                     builder: (context) =>
-                                        homeView(s.data()['username'])))
-                          })
-                      .catchError((err) => print("hhuuu"))
-                }
-            });
+                                        homeView(s.get('username'))
+                                )*/
+
+                      })
+                  .catchError((err) => print(err))
+            }
+        });
     super.initState();
   }
 

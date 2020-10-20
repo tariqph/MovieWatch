@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
-import 'package:watchmovie/MainView/homeView.dart';
+import 'package:watchmovie/Data_Structures/dataStruct.dart';
 
 
 // ignore: camel_case_types
@@ -135,11 +135,13 @@ class loginViewState extends State<loginView> {
             .then((result) => {
          /*Navigator.pushNamedAndRemoveUntil(
              context,'/home',result.data['username']),*/
-              Navigator.pushAndRemoveUntil(
+              Navigator.pushNamedAndRemoveUntil(
                   context,
-                  MaterialPageRoute(
-                      builder: (context) => homeView(result.data()['username'])),
-                      (_) => false),
+                  '/home', (_) => false,arguments:
+              UserData(result.get('fullname'), result.get('email'), result.get('username'))),
+                  /*MaterialPageRoute(
+                      builder: (context) => homeView(result.data()['username'])),*/
+                     // (_) => false),
               emailController.clear(),
               passwordController.clear(),
             }));

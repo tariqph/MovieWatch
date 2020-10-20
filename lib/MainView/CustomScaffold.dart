@@ -10,25 +10,28 @@ class CustomScaffold extends StatelessWidget {
   Scaffold for the main screen with Dismissible moviecards
    */
   final List<MovieData> movies;
-  final username;
+  final UserData userData;
 
-  CustomScaffold(this.movies, this.username);
+  CustomScaffold(this.movies, this.userData);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.indigo[50],
-      drawer: sideMenu(),
+      drawer: sideMenu(userData.username),
 
       //top Navigation bar
       appBar: AppBar(
+
+       // shadowColor: Colors.black,
         //leading: Icon(Icons.menu),
-        title: Text(username),
+      /*  title: Text(userData.username,overflow: TextOverflow.ellipsis,
+        style: TextStyle(color: Colors.white),),*/
         actions: [
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 30),
             child: Row(
               children: [
-                customNotification(username),
+                customNotification(userData.username),
                 SizedBox(
                   width: 15,
                 ),
@@ -44,12 +47,13 @@ class CustomScaffold extends StatelessWidget {
                   },
                 )*/
                 IconButton(
+                  color: Colors.white,
                   splashRadius: 25,
                   icon: Icon(Icons.face),
                   //tooltip: 'Increase volume by 10',
                   onPressed: () {
                     Navigator.pushNamed(context, '/friendtabs',
-                        arguments: username);
+                        arguments: userData);
                   },
                 )
               ],
@@ -57,7 +61,7 @@ class CustomScaffold extends StatelessWidget {
           ),
         ],
         backgroundColor: Colors.indigo[900],
-        //elevation: 0,
+        elevation: 0,
       ),
 
       body: dismissibleCard(movies),
@@ -167,9 +171,10 @@ class customNotification extends StatefulWidget {
 class customNotificationState extends State<customNotification> {
   // ignore: must_call_super
   /* initState(){
-
   }
 */
+
+  Color color = Colors.white;
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
@@ -178,9 +183,9 @@ class customNotificationState extends State<customNotification> {
             .where("friend2", isEqualTo: widget.username)
             .snapshots(),
         builder: (context, strm) {
-          print((strm.hasError));
+         // print((strm.hasError));
 
-          print(strm.connectionState);
+         // print(strm.connectionState);
           /*  if (strm.hasError) {
             print("here1");
             return Container(
@@ -229,7 +234,7 @@ class customNotificationState extends State<customNotification> {
               future: getData(widget.username),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
-                  print(snapshot.data[0].get('friend1name'));
+                  //print(snapshot.data[0].get('friend1name'));
                   if (snapshot.data.length > 0) {
                     String notif;
                     int len = snapshot.data.length;
@@ -239,7 +244,7 @@ class customNotificationState extends State<customNotification> {
                       notif = snapshot.data.length.toString();
                     }
 
-                    print("here4");
+                   // print("here4");
                     return Container(
                       decoration: BoxDecoration(
                         shape: BoxShape.rectangle,
@@ -253,7 +258,7 @@ class customNotificationState extends State<customNotification> {
 
                             icon: Icon(
                               Icons.notifications,
-                              color: Colors.white,
+                              color: color,
                             ),
                             onPressed: () {
                               Navigator.pushNamed(context, '/friendrequest',
@@ -300,7 +305,7 @@ class customNotificationState extends State<customNotification> {
                     );*/
 
                   } else {
-                    print("here5");
+                    //print("here5");
                     return Container(
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
@@ -311,7 +316,7 @@ class customNotificationState extends State<customNotification> {
                           // iconSize: 35,
                           icon: Icon(
                             Icons.notifications,
-                            color: Colors.white,
+                            color: color,
                           ),
                           onPressed: () {
                             Navigator.pushNamed(context, '/friendrequest',
@@ -320,7 +325,7 @@ class customNotificationState extends State<customNotification> {
                         ));
                   }
                 } else {
-                  print("here6");
+                 // print("here6");
                   return
                     Container(
                       decoration: BoxDecoration(
@@ -332,7 +337,7 @@ class customNotificationState extends State<customNotification> {
                         //iconSize: 35,
                         icon: Icon(
                           Icons.notifications,
-                          color: Colors.white,
+                          color: color,
                         ),
                         onPressed: () {
                           Navigator.pushNamed(context, '/friendrequest',

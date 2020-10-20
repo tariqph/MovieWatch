@@ -1,5 +1,3 @@
-
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +8,6 @@ class friendRequest extends StatefulWidget {
   // friendRequest(this.username);
   friendRequest({Key key}) : super(key: key);
 
-
   @override
   friendRequestState createState() => friendRequestState();
 }
@@ -19,25 +16,25 @@ class friendRequest extends StatefulWidget {
 class friendRequestState extends State<friendRequest> {
   //final String username = "tariqph";
 
-
   @override
   Widget build(BuildContext context) {
     final username = ModalRoute.of(context).settings.arguments;
-    print("hh1");
-    print(username);
+    //print("hh1");
+    //print(username);
 
-    return FutureBuilder(  //Future builder to builder after the async retrieval of documents
+    return FutureBuilder(
+        //Future builder to builder after the async retrieval of documents
         future: getData(username),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             //conditional for when documents are retrieved
             //Map<String, dynamic> data = snapshot.data.data();
             var rec = snapshot.data;
-            print(rec);
-            print("hh");
+            //print(rec);
+            //print("hh");
             int len = rec.length;
-            print(len);
-            print("jj");
+            //print(len);
+            //print("jj");
 
             return Scaffold(
               appBar: AppBar(
@@ -47,11 +44,11 @@ class friendRequestState extends State<friendRequest> {
               body: ListView.builder(
                   itemCount: len,
                   itemBuilder: (BuildContext context, int index) {
-                    return customTile(rec[index], declineRequest,acceptRequest);
+                    return customTile(
+                        rec[index], declineRequest, acceptRequest);
                   }),
             );
-          }
-          else {
+          } else {
             return Scaffold(
               appBar: AppBar(
                 title: Text("Friend Requests"),
@@ -76,8 +73,8 @@ class friendRequestState extends State<friendRequest> {
         .where("friend2", isEqualTo: username)
         .where("status", isEqualTo: "pending")
         .get();
-    print("herrrr");
-    print(wht.docs[0]);
+    /* print("herrrr");
+    print(wht.docs[0]);*/
     return wht.docs;
   }
 
@@ -116,8 +113,6 @@ class friendRequestState extends State<friendRequest> {
       }
     }).catchError((onError) => print(onError));
   }
-
-  
 }
 
 // ignore: camel_case_types, must_be_immutable
@@ -127,18 +122,46 @@ class customTile extends StatelessWidget {
   // This tile is called by a dynamic Listview
   final name;
   Function decline, accept;
-  customTile(this.name, this.decline,this.accept);
+  customTile(this.name, this.decline, this.accept);
 
   @override
   Widget build(BuildContext context) {
     return Column(children: [
       ListTile(
-        leading: FlutterLogo(),
-        title: Text(name.get('friend1name')),
+        leading: CircleAvatar(
+          //radius: 25,
+          backgroundImage: AssetImage('assets/images/avatar.png'),
+        ),
+        title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text(
+            name.get('friend1'),
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          ),
+          Text(name.get('friend1name'),
+              style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13, color: Colors.blueGrey))
+        ]),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
-          children: [
-            RaisedButton(
+          children: [IconButton(
+            //color: Colors.green,
+            icon:Icon(Icons.check_circle,color: Colors.green,),
+            iconSize: 50,
+            splashRadius: 25,
+            onPressed: () async {
+              await accept(name.get('friend1'), name.get('friend2'));
+            },
+          ),
+            IconButton(
+              //color: Colors.green,
+              icon:Icon(Icons.cancel,color: Colors.red,),
+              iconSize: 50,
+              splashRadius: 25,
+              onPressed: () async {
+                await decline(name.get('friend1'), name.get('friend2'));
+
+              },
+            ),
+           /* RaisedButton(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(4.0),
                 ),
@@ -160,7 +183,7 @@ class customTile extends StatelessWidget {
                 textColor: Colors.white,
                 onPressed: () async {
                   await decline(name.get('friend1'), name.get('friend2'));
-                })
+                })*/
           ],
         ),
       ),

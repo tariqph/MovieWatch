@@ -29,7 +29,7 @@ class MovieCard extends StatelessWidget {
         elevation: 2,
         //child: Expanded(
         child: Column(
-          // mainAxisSize: MainAxisSize.max, //added
+           mainAxisSize: MainAxisSize.max, //added
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -50,7 +50,7 @@ class MovieCard extends StatelessWidget {
               height: 2,
               width: 30,
             ),
-            Container(
+    /*        Container(
               //uncommented
 
               height: 230,
@@ -60,15 +60,18 @@ class MovieCard extends StatelessWidget {
                   image: NetworkImage(image),
                 ),
               ),
-            ),
+            ),*/
             //  SizedBox.expand(,
-            /*    FittedBox(
+            Container(
+              height: 230,
+
+               child:FittedBox(
                fit: BoxFit.fill,
                 child:
                 Image.network(
                   image,
                 ),
-      ),*/
+      ),),
             // ),
             SizedBox(
               height: 30,

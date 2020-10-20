@@ -6,13 +6,28 @@ import 'package:watchmovie/Misc_widgets/circleImage.dart';
 
 // ignore: camel_case_types
 class sideMenu extends StatelessWidget {
+
+  final username;
+  sideMenu(this.username);
   @override
   Widget build(BuildContext context) {
+
     Future<void> _signOut()  async{
       showDialog(
           context: context,
           builder: (BuildContext context) {
-            return AlertDialog(
+            return /*FractionallySizedBox(
+            heightFactor: 0.75,
+              widthFactor: 0.85,
+              child:Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  color: Colors.red,
+                ),
+
+                //color: Colors.red,
+
+              child:*/AlertDialog(
               title: Text("Logout"),
               content: Text("Are you sure? "),
               actions: <Widget>[
@@ -43,17 +58,26 @@ class sideMenu extends StatelessWidget {
           });
     }
 
-    return Drawer(
+    return Container(
+      width: 250,
+      child: Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
           DrawerHeader(
             child: Column(children: [
+              Spacer(),
+              circleImageAsset(50,"assets/images/avatar.png"),
+               /* backgroundColor: Colors.brown.shade800,
+                child: Text('TA'),*/
+
               Text(
-                'Side menu',
-                style: TextStyle(color: Colors.white, fontSize: 25),
+                username,
+                style: TextStyle(color: Colors.white,
+                    fontSize: 20
+                ),
               ),
-              circleImageAsset(70, "assets/images/netflix.png")
+              Spacer()
             ]),
             decoration: BoxDecoration(
               color: Colors.indigo[900],
@@ -92,6 +116,6 @@ class sideMenu extends StatelessWidget {
           ),
         ],
       ),
-    );
+    ),);
   }
 }

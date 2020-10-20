@@ -1,9 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:watchmovie/Data_Structures/dataStruct.dart';
+import 'package:watchmovie/FriendViews/friendCard.dart';
 
 // ignore: camel_case_types
 class sendRequest extends StatefulWidget {
+
+
   @override
   sendRequestState createState() {
     return sendRequestState();
@@ -31,7 +35,7 @@ class sendRequestState extends State<sendRequest> {
 
   @override
   Widget build(BuildContext context) {
-    final username = ModalRoute.of(context).settings.arguments;
+    final UserData userData = ModalRoute.of(context).settings.arguments;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -49,8 +53,8 @@ class sendRequestState extends State<sendRequest> {
                     //conditional for when documents are retrieved
                     //Map<String, dynamic> data = snapshot.data.data();
                     var rec = snapshot.data;
-                    print(rec);
-                    print("kil");
+                   // print(rec);
+                    //print("kil");
                     int len = rec.length;
 
                     return /*Container(*/
@@ -59,11 +63,12 @@ class sendRequestState extends State<sendRequest> {
                        child: ListView.builder(
                           itemCount: len,
                           itemBuilder: (BuildContext context, int index) {
-                            return customTile(rec[index], send,username);
+                            return customTile(rec[index], send,userData,search);
                           }
                     ));
                   } else {
                     return Center(
+
                         child: CircularProgressIndicator(
                             valueColor: new AlwaysStoppedAnimation<Color>(
                                 Colors.blue)));
@@ -98,22 +103,24 @@ class sendRequestState extends State<sendRequest> {
     return wht.docs;
   }
 
-  void send(String friend1, String friend2) async {
+  void send(String friend1, String friend1name,String friend2, String friend2name) async {
 
     /* Function to sen friend requests which creates a doc
     in FriendPair collection
      */
     await FirebaseFirestore.instance
         .collection("FriendPairs")
-        .where("friend2", isEqualTo: friend2)
-        .where("friend1", isEqualTo: friend1)
-        .get()
-        .then((snapshot) {
-      for (DocumentSnapshot ds in snapshot.docs) {
-        ds.reference.update({"status": "active"});
-        setState(() {});
-      }
-    }).catchError((onError) => print(onError));
+        .add(
+        {
+          'friend1': friend1,
+          'friend1name' : friend1name,
+          'friend2': friend2,
+          'friend2name' : friend2name,
+          'status' : 'pending'
+        }
+    )
+        .then((value) => print("User Added"))
+        .catchError((error) => print("Failed to add user: $error"));
   }
 
   String searchValidator(String value) {
@@ -168,13 +175,15 @@ class customTile extends StatelessWidget {
   /* Custom tile object for all pending friend request with
    nested buttons for accepting and declining requests  */
   // This tile is called by a dynamic Listview
-  final name,username;
+  final name;
+  final userData;
   Function send;
-  customTile(this.name, this.send,this.username);
+  TextEditingController search;
+  customTile(this.name, this.send,this.userData,this.search);
 
   @override
   Widget build(BuildContext context) {
-    if(username == name.get('username')){
+    if(userData.username == name.get('username')){
       return Container();
     }
     else {
@@ -184,9 +193,26 @@ class customTile extends StatelessWidget {
             Divider(),
 
             ListTile(
-                leading: FlutterLogo(),
-                title: Text(name.get('fullname')),
-                trailing: RaisedButton(
+
+                leading: CircleAvatar(
+                  //radius: 25,
+                  backgroundImage: AssetImage('assets/images/avatar.png'),
+                ),
+                title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Text(
+                    name.get('username'),
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                  ),
+                  Text(name.get('fullname'),
+                      style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13, color: Colors.blueGrey))
+                ]),
+                onTap: () {
+                  popUp(context, name.get('username'),name.get('fullname'),userData.username,userData.fullname);
+                  search.clear();
+
+                }
+
+               /* trailing: RaisedButton(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(4.0),
                     ),
@@ -194,10 +220,21 @@ class customTile extends StatelessWidget {
                     color: Colors.green[600],
                     textColor: Colors.white,
                     onPressed: () async {
-                      // await send(name.data['friend1'], name.data['friend2']);
-                    })),
+                       await send(userData.username,userData.fullname,name.get('username'),name.get('fullname'));
+                    })*/
+            ),
 
           ]);
     }
+
+
   }
+  Future<void> popUp(context, friendUsername,friendFullname,username, fullname)  async{
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return friendCard(username, friendUsername, friendFullname,fullname);
+        });
+  }
+
 }

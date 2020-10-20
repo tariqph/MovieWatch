@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
-import '../MainView/homeView.dart';
+import 'package:watchmovie/Data_Structures/dataStruct.dart';
 
 // ignore: camel_case_types
 class signInView extends StatefulWidget {
@@ -232,11 +232,14 @@ class signUpViewState extends State<signInView> {
          "searchArray" : array
         })
             .then((result) => {
-          Navigator.pushAndRemoveUntil(
+          Navigator.pushNamedAndRemoveUntil(
               context,
-              MaterialPageRoute(
+             '/home', (_) => false,arguments:
+          UserData(fullNameController.text, emailController.text, usernameController.text))
+             /* MaterialPageRoute(
                   builder: (context) => homeView(usernameController.text)),
-                  (_) => false),
+                  (_) => false*/
+          ,
           fullNameController.clear(),
           usernameController.clear(),
           emailController.clear(),

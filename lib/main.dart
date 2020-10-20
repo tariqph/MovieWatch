@@ -22,7 +22,7 @@ class MainApp extends StatelessWidget {
 // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    final username="place";
+   // final username="place";
     return MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
@@ -31,7 +31,7 @@ class MainApp extends StatelessWidget {
         home: SplashPage(),
         routes: <String, WidgetBuilder>{
           // '/task': (BuildContext context) => TaskPage(title: 'Task'),
-          '/home': (BuildContext context) => homeView(username),// Change this in future(actual meaning) to named route with passing arguments
+          '/home': (BuildContext context) => homeView(),// Change this in future(actual meaning) to named route with passing arguments
           '/login': (BuildContext context) => loginView(),
           '/signup': (BuildContext context) => signInView(),
           '/friendrequest' :(BuildContext context) => friendRequest(),
