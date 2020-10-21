@@ -59,13 +59,14 @@ class sendRequestState extends State<sendRequest> {
 
                     return /*Container(*/
                      // height: 80,
-                      Expanded(
-                       child: ListView.builder(
+                     /* Expanded(
+                       child: */ListView.builder(
+                         shrinkWrap: true,
                           itemCount: len,
                           itemBuilder: (BuildContext context, int index) {
-                            return customTile(rec[index], send,userData,search);
+                            return customTile(rec[index],userData,search);
                           }
-                    ));
+                    );
                   } else {
                     return Center(
 
@@ -142,12 +143,17 @@ class customFormField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
+    return /*Container(
+      height: 50,
+      child:*/ TextFormField(
+      minLines: 1,
+      maxLines: 3,
       validator: validate, //put in a validator for only
       controller: ctrl,
       autovalidateMode: AutovalidateMode.always,
       //obscureText: pwd,
       decoration: InputDecoration(
+        contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
         prefixIcon: Icon(CupertinoIcons.search),
         hintText: txt,
         fillColor: Colors.black.withOpacity(0.1),
@@ -155,14 +161,14 @@ class customFormField extends StatelessWidget {
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(30.0),
           borderSide:
-              BorderSide(color: Colors.black.withOpacity(0.6), width: 3),
+              BorderSide(color: Colors.black.withOpacity(0.6), width: 1),
         ),
 
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(30.0),
           borderSide: BorderSide(
             color: Colors.black.withOpacity(0.05),
-            width: 2.0,
+            width: 0.5,
           ),
         ),
       ),
@@ -177,9 +183,8 @@ class customTile extends StatelessWidget {
   // This tile is called by a dynamic Listview
   final name;
   final userData;
-  Function send;
   TextEditingController search;
-  customTile(this.name, this.send,this.userData,this.search);
+  customTile(this.name,this.userData,this.search);
 
   @override
   Widget build(BuildContext context) {
@@ -208,7 +213,7 @@ class customTile extends StatelessWidget {
                 ]),
                 onTap: () {
                   popUp(context, name.get('username'),name.get('fullname'),userData.username,userData.fullname);
-                  search.clear();
+                 // search.clear();
 
                 }
 

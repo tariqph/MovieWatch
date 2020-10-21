@@ -36,19 +36,17 @@ class friendCardState extends State<friendCard> {
                   widget.friendUsername,
                   widget.friendFullname,
                   widget.fullname,
-                  snapshot.data[0][0].get('status'),
-                  send);
+                  snapshot.data[0][0].get('status'));
             } else if (snapshot.data[1].length == 1) {
               return fCard(
                   widget.username,
                   widget.friendUsername,
                   widget.friendFullname,
                   widget.fullname,
-                  snapshot.data[1][0].get('status'),
-                  send);
+                  snapshot.data[1][0].get('status'));
             } else {
               return fCard(widget.username, widget.friendUsername,
-                  widget.friendFullname, widget.fullname, 'notF', send);
+                  widget.friendFullname, widget.fullname, 'notF');
             }
           } else {
             return FractionallySizedBox(
@@ -65,7 +63,7 @@ class friendCardState extends State<friendCard> {
                   child: Shimmer.fromColors(
                       child: Center(
                         child: Column(
-                            //crossAxisAlignment: CrossAxisAlignment.start,
+                          //crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               SizedBox(
                                 height: 50,
@@ -141,25 +139,8 @@ class friendCardState extends State<friendCard> {
     return [wht1.docs, wht2.docs];
     //return wht1.docs;
   }
-
-  void send(String friend1, String friend1name, String friend2,
-      String friend2name) async {
-    /* Function to sen friend requests which creates a doc
-    in FriendPair collection
-     */
-    await FirebaseFirestore.instance
-        .collection("FriendPairs")
-        .add({
-          'friend1': friend1,
-          'friend1name': friend1name,
-          'friend2': friend2,
-          'friend2name': friend2name,
-          'status': 'pending'
-        })
-        .then((value) => print("User Added"))
-        .catchError((error) => print("Failed to add user: $error"));
-  }
 }
+
 
 // ignore: camel_case_types
 class fCard extends StatelessWidget {
@@ -168,10 +149,10 @@ class fCard extends StatelessWidget {
   final friendFullname;
   final fullname;
   final status;
-  final Function send;
+
 
   fCard(this.username, this.friendUsername, this.friendFullname, this.fullname,
-      this.status, this.send);
+      this.status);
 
   @override
   Widget build(BuildContext context) {
@@ -253,4 +234,23 @@ class fCard extends StatelessWidget {
               ],
             ))));
   }
+
+  Future send(String friend1, String friend1name, String friend2,
+  String friend2name) async {
+  /* Function to sen friend requests which creates a doc
+    in FriendPair collection
+     */
+  await FirebaseFirestore.instance
+      .collection("FriendPairs")
+      .add({
+  'friend1': friend1,
+  'friend1name': friend1name,
+  'friend2': friend2,
+  'friend2name': friend2name,
+  'status': 'pending'
+  })
+      .then((value) => print("User Added"))
+      .catchError((error) => print("Failed to add user: $error"));
+  }
+
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:watchmovie/FriendViews/FriendList.dart';
 import 'package:watchmovie/FriendViews/sendRequest.dart';
 
 class TabView extends StatelessWidget {
@@ -30,7 +31,7 @@ class TabView extends StatelessWidget {
         body: TabBarView(
           children: [
            sendRequest(),
-            Center( child: Text("Page 2")),
+            FriendList(),
           ],
         ),
       ),
