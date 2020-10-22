@@ -4,6 +4,8 @@ import 'package:watchmovie/FriendViews/sendRequest.dart';
 
 class TabView extends StatelessWidget {
 
+
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(

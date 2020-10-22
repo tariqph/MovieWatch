@@ -16,6 +16,12 @@ class friendRequest extends StatefulWidget {
 class friendRequestState extends State<friendRequest> {
   //final String username = "tariqph";
 
+  void dispose(){
+
+    print('exit');
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final username = ModalRoute.of(context).settings.arguments;

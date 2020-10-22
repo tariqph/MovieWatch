@@ -200,6 +200,9 @@ class fCard extends StatelessWidget {
                   height: 60,
                 ),
                 (status == "active" || status == "pending")
+                ?(status == 'active')?Text('Friends'):Text("Pending Request")
+                :Text(""),
+                (status == "active" || status == "pending")
                     ? RaisedButton.icon(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(4.0),
@@ -211,12 +214,13 @@ class fCard extends StatelessWidget {
                               )
                             : Icon(Icons.pending, color: Colors.red),
                         label: (status == "active")
-                            ? Text("Friends")
-                            : Text("Pending"),
+                            ? Text("Unfriend")
+                            : Text("Delete Request"),
                         color: Colors.green[600],
                         textColor: Colors.white,
                         onPressed: () async {
-                          //await accept(name.get('friend1'), name.get('friend2'));
+                          await unFriend(username, friendUsername);
+                          Navigator.of(context).pop();
                         })
                     : RaisedButton.icon(
                         shape: RoundedRectangleBorder(
@@ -251,6 +255,38 @@ class fCard extends StatelessWidget {
   })
       .then((value) => print("User Added"))
       .catchError((error) => print("Failed to add user: $error"));
+  }
+
+  Future unFriend(String friend1, String friend2
+      ) async {
+    /* Function to sen friend requests which creates a doc
+    in FriendPair collection
+     */
+    await FirebaseFirestore.instance
+        .collection("FriendPairs")
+        .where("friend1",isEqualTo:friend1)
+        .where("friend2",isEqualTo:friend2)
+        .get()
+        .then((querySnapshot){
+          querySnapshot.docs.forEach((doc){
+            doc.reference.delete();
+          });
+
+    }).catchError((error) => print("Failed to delete user: $error"));
+
+    await FirebaseFirestore.instance
+        .collection("FriendPairs")
+        .where("friend1",isEqualTo:friend2)
+        .where("friend2",isEqualTo:friend1)
+        .get()
+        .then((querySnapshot){
+      querySnapshot.docs.forEach((doc){
+        doc.reference.delete();
+      });
+
+    }).catchError((error) => print("Failed to delete user: $error"));
+
+
   }
 
 }

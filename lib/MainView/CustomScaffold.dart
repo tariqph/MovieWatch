@@ -96,7 +96,12 @@ class CustomScaffold extends StatelessWidget {
                       child: Text("Throw PARTY"),
                       color: Colors.indigo[900],
                       textColor: Colors.white,
-                      onPressed: () {}),
+                      onPressed: () {
+                         startParty(userData.username, userData.fullname);
+                         Navigator.pushNamed(context, '/startParty',
+                             arguments: userData);
+
+                      }),
                 ),
                 /* Spacer(),
               SizedBox(
@@ -154,6 +159,26 @@ class CustomScaffold extends StatelessWidget {
       // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
+
+  Future startParty(String username, String fullname) async{
+
+    await FirebaseFirestore
+        .instance.collection('Parties')
+        .doc(username)
+        .set({
+      'creator' : username,
+      'creatorName' : fullname,
+      'memberCount': 1,
+      'member1' : username,
+      'memberName1' : fullname
+    }
+    ).then((doc){
+
+    }).catchError((err){
+      print('Error creating document $err');
+    });
+  }
+
 }
 
 // ignore: camel_case_types

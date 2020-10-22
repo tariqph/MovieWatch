@@ -24,6 +24,8 @@ class dismissibleCard extends StatefulWidget {
 class dismissibleCardState extends State<dismissibleCard> with TickerProviderStateMixin{
   int index = 0;
 
+
+
   //here to
   /*AnimationController _controller;
   Animation<double> _animation;

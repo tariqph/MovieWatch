@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
+import 'package:watchmovie/SwipeGame/StartParty.dart';
 import 'FriendViews/TabView.dart';
 import 'package:watchmovie/Authentication/loginView.dart';
 import 'package:watchmovie/Authentication/singUp.dart';
@@ -37,6 +38,7 @@ class MainApp extends StatelessWidget {
           '/signup': (BuildContext context) => signInView(),
           '/friendrequest' :(BuildContext context) => friendRequest(),
           '/friendtabs' :(BuildContext context) => TabView(),
+          '/startParty' :(BuildContext context) => StartParty(),
 
         });
   }

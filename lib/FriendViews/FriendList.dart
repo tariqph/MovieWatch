@@ -13,15 +13,15 @@ class FriendList extends StatefulWidget{
 
 }
 
-class FriendListState extends State<FriendList> with AutomaticKeepAliveClientMixin<FriendList>{
+class FriendListState extends State<FriendList> /*with AutomaticKeepAliveClientMixin<FriendList>*/{
 
-  @override
-  bool get wantKeepAlive => true;
+/*  @override
+  bool get wantKeepAlive => true;*/
 
 
   @override
   Widget build(BuildContext context) {
-   super.build(context);
+   //super.build(context);
     final UserData userData = ModalRoute.of(context).settings.arguments;
     return FutureBuilder(
       //Future builder to builder after the async retrieval of documents
@@ -32,12 +32,12 @@ class FriendListState extends State<FriendList> with AutomaticKeepAliveClientMix
             //conditional for when documents are retrieved
             //Map<String, dynamic> data = snapshot.data.data();
             var rec = snapshot.data;
-            print(rec);
+            //print(rec);
             //print("hh");
             int len1 = rec[0].length;
             int len2 = rec[1].length;
-            print(len1);
-            print(len2);
+            //print(len1);
+            //print(len2);
             //print("jj");
 
             return
