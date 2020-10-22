@@ -110,7 +110,7 @@ class customTile extends StatelessWidget {
       return Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Divider(),
+            //Divider(),
 
             ListTile(
 

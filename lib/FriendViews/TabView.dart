@@ -14,13 +14,13 @@ class TabView extends StatelessWidget {
         appBar: AppBar(
           bottom: TabBar(
             tabs: [
-              Tab(//icon: Icon(Icons.directions_car,
+              Tab(//\icon: Icon(Icons.directions_car,
                // color: Colors.blue), text: "Send Request",
                   child: Text("Send Request",
                     style: TextStyle(fontSize: 20),
                   )
               ),
-              Tab(//icon: Icon(Icons.directions_transit),
+              Tab(//icon: Icon(Icons.boot),
                 //text: "Friends",
                 child: Text("Friends",
                   style: TextStyle(fontSize: 20),

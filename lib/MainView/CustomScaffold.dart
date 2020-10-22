@@ -162,6 +162,16 @@ class CustomScaffold extends StatelessWidget {
 
   Future startParty(String username, String fullname) async{
 
+    var  array =[];
+
+    for ( int i = 4; i < username.length + 1; i++) {
+      array.add(username.substring(0,i).toLowerCase());
+    }
+    for ( int i = 4; i < fullname.length + 1; i++) {
+      array.add(fullname.substring(0,i).toLowerCase());
+    }
+
+
     await FirebaseFirestore
         .instance.collection('Parties')
         .doc(username)
@@ -169,8 +179,9 @@ class CustomScaffold extends StatelessWidget {
       'creator' : username,
       'creatorName' : fullname,
       'memberCount': 1,
-      'member1' : username,
-      'memberName1' : fullname
+      'member' : [username],
+      'memberName' : [fullname],
+      'searchArray' : array
     }
     ).then((doc){
 
