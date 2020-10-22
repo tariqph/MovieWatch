@@ -110,17 +110,18 @@ class customTile extends StatelessWidget {
               await accept(name.get('friend1'), name.get('friend2'));
             },
           ),*/
-            /*IconButton(
+            IconButton(
               //color: Colors.green,
-              icon:Icon(Icons.cancel,color: Colors.red,),
+              icon:Icon(Icons.eject,color: Colors.red,),
               iconSize: 50,
               splashRadius: 25,
               onPressed: () async {
-                //await kickOut(name.get('friend1'), name.get('friend2'));
+                                await kickOut(party.get('member')[memberNumber],party.get('memberName')[memberNumber], party.get('creator'));
+
 
               },
-            ),*/
-             RaisedButton(
+            ),
+             /*RaisedButton(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(4.0),
                 ),
@@ -132,7 +133,7 @@ class customTile extends StatelessWidget {
                 }),
             SizedBox(
               width: 4,
-            ),
+            ),*/
             /*
             RaisedButton(
                 shape: RoundedRectangleBorder(
