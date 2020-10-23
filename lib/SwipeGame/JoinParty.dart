@@ -11,15 +11,15 @@ class JoinParty extends StatefulWidget {
 }
 
 class JoinPartyState extends State<JoinParty> {
-  TextEditingController search = TextEditingController();
+  TextEditingController searchParty = TextEditingController();
   bool isSearching = false;
   bool showFriends = true;
   UserData userData;
   //var friends;
 
   JoinPartyState() {
-    search.addListener(() {
-      if (search.text.length > 3) {
+    searchParty.addListener(() {
+      if (searchParty.text.length > 3) {
         setState(() {
           isSearching = true;
         });
@@ -54,7 +54,8 @@ class JoinPartyState extends State<JoinParty> {
           child: FloatingActionButton(
               backgroundColor: Colors.teal,
               //splashColor: Colors.yellow[900],
-              child: Icon(Icons.refresh),
+              child: Icon(Icons.refresh,
+              size: 50,),
               onPressed: () {
                 setState(() {
                   showFriends = true;
@@ -66,9 +67,9 @@ class JoinPartyState extends State<JoinParty> {
           Container(
               padding: EdgeInsets.all(10),
               child: customFormField(
-                  "Search for Parties", search, searchValidator)),
-          (showFriends) //ternary operator used, if isSearching is true then a party created
-              // by a user is searched else it shows parties created by users who are already friends(if present)
+                  "Search for Parties", searchParty, searchValidator)),
+          (showFriends) //ternary operator used, if showFriends is true then parties created
+              //  by users who are already friends is listed(if present)
               ? FutureBuilder(
                   future: joinParty(userData.username),
                   builder: (context, snapshot) {
@@ -92,11 +93,35 @@ class JoinPartyState extends State<JoinParty> {
                     }
                   })
               : (isSearching)
-                  ? Container(
-                      child: Text('Searching'),
-                    )
+                  ? FutureBuilder(
+            //Future builder to builder after the async retrieval of documents
+              future: getParty(searchParty.text),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  //conditional for when documents are retrieved
+                  //Map<String, dynamic> data = snapshot.data.data();
+                  var rec = snapshot.data.docs;
+                  // print(rec);
+                  //print("kil");
+                  int len = rec.length;
+
+                  return ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: len,
+                      itemBuilder: (BuildContext context, int index) {
+                        return customTile(rec[index], userData);
+                      }
+                  );
+                } else {
+                  return Center(
+
+                      child: CircularProgressIndicator(
+                          valueColor: new AlwaysStoppedAnimation<Color>(
+                              Colors.blue)));
+                }
+              })
                   : Container(
-                      child: Text('not Searching'),
+                      child: Text(''),
                     )
         ]));
   }
@@ -145,6 +170,21 @@ class JoinPartyState extends State<JoinParty> {
         .collection('Parties')
         .where('creator', whereIn: searchArray)
         .get();
+  }
+
+  Future getParty(String username) async {
+/*
+    Function to get the pending friend requests which retrieves
+    documents from FriendPair collection
+ */
+    var wht = await FirebaseFirestore.instance
+        .collection("Parties")
+        .where("searchArray", arrayContains: username)
+    //.where("username", notEqualto: "pending")
+        .limit(10)
+        .get();
+    //print(wht.documents[0].data);
+    return wht;
   }
 }
 
@@ -195,10 +235,10 @@ class customFormField extends StatelessWidget {
 class customTile extends StatelessWidget {
   /* Custom tile object for all parties created by User's friends  */
   // This tile is called by a dynamic Listview
-  final docs;
+  final partyDoc;
   final userData;
 
-  customTile(this.docs, this.userData);
+  customTile(this.partyDoc, this.userData);
 
   @override
   Widget build(BuildContext context) {
@@ -217,10 +257,10 @@ class customTile extends StatelessWidget {
           title:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(
-              '${docs.get('creatorName')}\'s Party',
+              '${partyDoc.get('creatorName')}\'s Party',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
             ),
-            Text(docs.get('creator'),
+            Text(partyDoc.get('creator'),
                 style: TextStyle(
                     fontWeight: FontWeight.normal,
                     fontSize: 13,

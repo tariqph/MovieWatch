@@ -57,10 +57,7 @@ class sendRequestState extends State<sendRequest> {
                     //print("kil");
                     int len = rec.length;
 
-                    return /*Container(*/
-                     // height: 80,
-                     /* Expanded(
-                       child: */ListView.builder(
+                    return ListView.builder(
                          shrinkWrap: true,
                           itemCount: len,
                           itemBuilder: (BuildContext context, int index) {
