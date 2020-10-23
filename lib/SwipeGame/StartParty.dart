@@ -181,8 +181,8 @@ class customTile extends StatelessWidget {
       // Return the new count
       //return newFollowerCount;
     })
-        .then((value) => print("Follower count updated to $value"))
-        .catchError((error) => print("Failed to update user followers: $error"));
+        .then((value) => print("member count updated"))
+        .catchError((error) => print("Failed to update user followers"));
 
   }
 

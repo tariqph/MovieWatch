@@ -131,7 +131,11 @@ class CustomScaffold extends StatelessWidget {
                       child: Text("Join PARTY"),
                       color: Colors.indigo[900],
                       textColor: Colors.white,
-                      onPressed: () {}),
+                      onPressed: () async{
+                        //startParty(userData.username, userData.fullname);
+                        Navigator.pushNamed(context, '/joinParty',
+                            arguments: userData);
+                      }),
                 ),
                 Spacer()
               ],
@@ -189,6 +193,8 @@ class CustomScaffold extends StatelessWidget {
       print('Error creating document $err');
     });
   }
+
+
 
 }
 

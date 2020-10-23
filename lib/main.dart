@@ -9,6 +9,7 @@ import 'package:watchmovie/Authentication/singUp.dart';
 import 'Authentication/splashPage.dart';
 import 'FriendViews/friendRequest.dart';
 import 'MainView/homeView.dart';
+import 'SwipeGame/JoinParty.dart';
 
 
 Future<void> main() async {
@@ -39,6 +40,7 @@ class MainApp extends StatelessWidget {
           '/friendrequest' :(BuildContext context) => friendRequest(),
           '/friendtabs' :(BuildContext context) => TabView(),
           '/startParty' :(BuildContext context) => StartParty(),
+          '/joinParty' :(BuildContext context) => JoinParty(),
 
         });
   }
