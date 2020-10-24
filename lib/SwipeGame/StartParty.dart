@@ -154,7 +154,6 @@ class customTile extends StatelessWidget {
 
   kickOut( member,memberName ,creator) async{
 
-
     DocumentReference docRef=  FirebaseFirestore.instance
         .collection('Parties').doc(creator);
 
@@ -174,12 +173,10 @@ class customTile extends StatelessWidget {
 
       // Perform an update on the document
       transaction.update(docRef, {'memberCount': newMemberCount,
-      'member': FieldValue.arrayRemove([member]),
+      'member': FieldValue.arrayRemove([member]),//arrayRemove will remove all members from same name
         'memberName': FieldValue.arrayRemove([memberName]),
       });
 
-      // Return the new count
-      //return newFollowerCount;
     })
         .then((value) => print("member count updated"))
         .catchError((error) => print("Failed to update user followers"));

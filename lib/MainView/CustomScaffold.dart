@@ -185,7 +185,8 @@ class CustomScaffold extends StatelessWidget {
       'memberCount': 1,
       'member' : [username],
       'memberName' : [fullname],
-      'searchArray' : array
+      'searchArray' : array,
+      'partyStarted' : 'no'
     }
     ).then((doc){
 

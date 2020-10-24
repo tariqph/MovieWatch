@@ -215,7 +215,7 @@ class fCard extends StatelessWidget {
                             : Icon(Icons.pending, color: Colors.red),
                         label: (status == "active")
                             ? Text("Unfriend")
-                            : Text("Delete Request"),
+                            : Text("Delete Request"), //unfriend or delete request depending on the friendship status
                         color: Colors.green[600],
                         textColor: Colors.white,
                         onPressed: () async {
