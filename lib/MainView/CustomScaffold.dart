@@ -128,11 +128,12 @@ class CustomScaffold extends StatelessWidget {
                       bottomRight: Radius.circular(15.0)),
                     ),
 
-                      child: Text("Join PARTY"),
+                      child:
+                      Text("Join PARTY"),
                       color: Colors.indigo[900],
                       textColor: Colors.white,
                       onPressed: () async{
-                        //startParty(userData.username, userData.fullname);
+
                         Navigator.pushNamed(context, '/joinParty',
                             arguments: userData);
                       }),

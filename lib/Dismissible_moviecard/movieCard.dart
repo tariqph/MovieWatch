@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:watchmovie/Misc_widgets/circleImage.dart';
 
 class MovieCard extends StatelessWidget {
-  final title, dur, year, genre, synopsis;
+  final title, dur, year, genre, synopsis, platform;
   final image;
   MovieCard(
-      this.title, this.dur, this.year, this.genre, this.synopsis, this.image);
+      this.title, this.dur, this.year, this.genre, this.synopsis, this.image, this.platform);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -21,14 +21,16 @@ class MovieCard extends StatelessWidget {
       //padding: EdgeInsets.all(6),
       margin: EdgeInsets.all(6.0),
       // child: Expanded(
-      child: Card(
+      child:
+      Card(
         //color: Colors.indigo[50],
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
         ),
         elevation: 2,
         //child: Expanded(
-        child: Column(
+        child:
+        Column(
            mainAxisSize: MainAxisSize.max, //added
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -68,9 +70,13 @@ class MovieCard extends StatelessWidget {
                child:FittedBox(
                fit: BoxFit.fill,
                 child:
-                Image.network(
-                  image,
+                FadeInImage.assetNetwork(
+                  placeholder: "assets/images/placeholder.png",
+                  image: image,
                 ),
+                /*Image.network(
+                  image,
+                ),*/
       ),),
             // ),
             SizedBox(
@@ -140,7 +146,7 @@ class MovieCard extends StatelessWidget {
             //child:
             Row(children: [
               Spacer(),
-              circleImageAsset(70, "assets/images/netflix.png"),
+              circleImageAsset(70, "assets/images/$platform.png"),
               Spacer()
             ]),
             //Expanded(

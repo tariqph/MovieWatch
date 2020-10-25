@@ -32,7 +32,7 @@ class TabView extends StatelessWidget {
         ),
         body: TabBarView(
           children: [
-           sendRequest(),
+        sendRequest(),
             FriendList(),
           ],
         ),

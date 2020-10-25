@@ -42,12 +42,14 @@ class sendRequestState extends State<sendRequest> {
       children: [
         Container(
             padding: EdgeInsets.all(10),
-            child: customFormField("Search for Friends", search, searchValidator)
+
+    child:
+            customFormField("Search for Friends", search)
         ),
         isSearching
             ? FutureBuilder(
                 //Future builder to builder after the async retrieval of documents
-                future: getData(search.text),
+                future: getData(search.text.toLowerCase()),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.done) {
                     //conditional for when documents are retrieved
@@ -121,13 +123,13 @@ class sendRequestState extends State<sendRequest> {
         .catchError((error) => print("Failed to add user: $error"));
   }
 
-  String searchValidator(String value) {
+  /*String searchValidator(String value) {
     if (!(value == value.toLowerCase())) {
       return 'Please use lowercase';
     } else {
       return null;
     }
-  }
+  }*/
 }
 
 // ignore: camel_case_types
@@ -135,8 +137,8 @@ class customFormField extends StatelessWidget {
   final txt;
   // final bool pwd;
   final TextEditingController ctrl;
-   final String Function(String) validate;
-  customFormField(this.txt, this.ctrl,this.validate);
+  // final String Function(String) validate;
+  customFormField(this.txt, this.ctrl);
 
   @override
   Widget build(BuildContext context) {
@@ -145,7 +147,7 @@ class customFormField extends StatelessWidget {
       child:*/ TextFormField(
       minLines: 1,
       maxLines: 3,
-      validator: validate, //put in a validator for only
+      //validator: validate, //put in a validator for only
       controller: ctrl,
       autovalidateMode: AutovalidateMode.always,
       //obscureText: pwd,

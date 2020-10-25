@@ -11,6 +11,7 @@ import '../Data_Structures/dataStruct.dart';
 class dismissibleCard extends StatefulWidget {
   final List<MovieData> movies;
 
+
   //MyApp({Key key}) : super(key: key);
   dismissibleCard(this.movies);
 
@@ -27,31 +28,38 @@ class dismissibleCardState extends State<dismissibleCard> with TickerProviderSta
 
 
   //here to
-  /*AnimationController _controller;
+  AnimationController _controller;
   Animation<double> _animation;
+
 
   @override
   void initState() {
-    super.initState();
     _controller = AnimationController(
-      duration: const Duration(seconds: 2),
+      duration: const Duration(seconds:1),
+      lowerBound: 0.6,
       vsync: this,
-    )..reset();
+    )..animateTo(1);
     _animation = CurvedAnimation(
       parent: _controller,
       curve: Curves.fastOutSlowIn,
     );
+    super.initState();
+
+
   }
 
   @override
   void dispose() {
-    super.dispose();
     _controller.dispose();
-  }*/
+    super.dispose();
+
+  }
 //here
   @override
   Widget build(BuildContext context) {
     //final title = 'Dismissing Items';
+    _controller.forward();
+
 
     return Directionality(
       textDirection: TextDirection.ltr,
@@ -79,22 +87,34 @@ class dismissibleCardState extends State<dismissibleCard> with TickerProviderSta
             SizedBox(
               height: 100,
             ),*/
-   /* ScaleTransition(
+    ScaleTransition(
     scale: _animation,
-    child:*/MovieCard(
+    child:MovieCard(
               widget.movies[index].title,
               widget.movies[index].dur,
               widget.movies[index].year,
               widget.movies[index].genre,
               widget.movies[index].synopsis,
-              widget.movies[index].image),
+              widget.movies[index].image,
+              widget.movies[index].platform)),
+
+
           onDismissed: (direction) {
+         if(direction == DismissDirection.endToStart){
+           print('disliked');
+         }
+         if(direction == DismissDirection.startToEnd){
+           print('Liked');
+         }
             // Remove the item from the data source.
             setState(() {
+          _controller.reset();
               index++;
             });
           }),
      // ),
     );
   }
+
+
 }

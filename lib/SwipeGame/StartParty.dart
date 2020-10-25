@@ -11,6 +11,13 @@ class StartParty extends StatefulWidget {
 }
 
 class StartPartyState extends State<StartParty> {
+
+  /*This is the Start Party route and  called when a user taps the Start Party button on the MainView.
+  After the button is pressed a document is created in the Parties collection with partyStarted status
+   as 'no'. When partyStarted is no in the doc, the doc is searchable by other users to join.
+   After the doc creation this route is called. In this route the users who koi the party are visible and
+   the creator has the right to kick any user from the party.
+  */
   UserData userData;
 
   void dispose() {
@@ -58,6 +65,8 @@ class StartPartyState extends State<StartParty> {
   }
 
   Future deleteParty(String username) async {
+    //This function deletes the doc created in the Parties collection whe the User pops the routes or taps the cancel button.
+    //This function deletes the doc created in the Parties collection whe the User pops the routes or taps the cancel button.Function
     await FirebaseFirestore.instance
         .collection('Parties')
         .doc(username)
@@ -154,6 +163,10 @@ class customTile extends StatelessWidget {
 
   kickOut( member,memberName ,creator) async{
 
+    /* This function uses a transaction to eject any user as the creator of the party decides.
+    Transaction is used to change the array vale and memberCount atomically.
+    * */
+
     DocumentReference docRef=  FirebaseFirestore.instance
         .collection('Parties').doc(creator);
 
@@ -165,9 +178,7 @@ class customTile extends StatelessWidget {
         throw Exception("User does not exist!");
       }
 
-      // Update the follower count based on the current count
-      // Note: this could be done without a transaction
-      // by updating the population using FieldValue.increment()
+
 
       int newMemberCount = snapshot.get('memberCount') - 1;
 

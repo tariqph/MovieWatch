@@ -12,6 +12,16 @@ class JoinParty extends StatefulWidget {
 }
 
 class JoinPartyState extends State<JoinParty> {
+  /* This is the Join party view in which the user join a selected Party created by another user.
+  This route is navigated after tapping the Join Party button in CustomScaffold.
+  This widget utilizes multiple Future Builder and Streambuilder to implement the joining functionality.
+   There are multiple ways for a user to join a created party. All the parties with partyStarted status as
+   'no' are searchable explicitly by the user. Also, the parties created by a users who are an active friend are
+   automatically visible. When a user taps a created party, the user's data is appended and memeberCount is updated
+   in the party doc using a transaction. After that a dialog box opens up with details of the current party
+   members which is updated using a streambuilder anytime a new user joins the party.
+  * */
+
   TextEditingController searchParty = TextEditingController();
   bool isSearching = false;
   bool showFriends = true;
@@ -41,7 +51,8 @@ class JoinPartyState extends State<JoinParty> {
         backgroundColor: Colors.white,
         //Base Scaffold is build first with the search bar is build without the future builder
         appBar: AppBar(
-          title: Text('Join Party'),
+          title:
+          Text('Join Party'),
         ),
         floatingActionButton: Container(
           //floating action button to refresh the Parties created by friends
@@ -70,7 +81,7 @@ class JoinPartyState extends State<JoinParty> {
           Container(
               padding: EdgeInsets.all(10),
               child: customFormField(
-                  "Search for Parties", searchParty, searchValidator)),
+                  "Search for Parties", searchParty)),
           (showFriends) //ternary operator used, if showFriends is true then parties created
               //  by users who are already friends is listed(if present)
               ? FutureBuilder(
@@ -89,16 +100,23 @@ class JoinPartyState extends State<JoinParty> {
                             return customTile(docs[index], userData);
                           });
                     } else {
-                      return Center(
+                      return Container(
+                        height: ((MediaQuery.of(context).size.height)*0.6),
+                        child:
+                        Column(
+                        children:[Spacer(),
+                        Center(
+                        child: Container(
                           child: CircularProgressIndicator(
                               valueColor: new AlwaysStoppedAnimation<Color>(
-                                  Colors.blue)));
+                                  Colors.blue)))),
+                        Spacer()]));
                     }
                   })
               : (isSearching)
                   ? FutureBuilder(
                       //Future builder to builder after the async retrieval of documents
-                      future: getParty(searchParty.text),
+                      future: getParty(searchParty.text.toLowerCase()),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState == ConnectionState.done) {
                           //conditional for when documents are retrieved
@@ -127,13 +145,13 @@ class JoinPartyState extends State<JoinParty> {
         ]));
   }
 
-  String searchValidator(String value) {
+  /*String searchValidator(String value) {
     if (!(value == value.toLowerCase())) {
       return 'Please use lowercase';
     } else {
       return null;
     }
-  }
+  }*/
 
   Future showParties(String username) async {
 /*
@@ -196,8 +214,8 @@ class customFormField extends StatelessWidget {
   final txt;
   // final bool pwd;
   final TextEditingController ctrl;
-  final String Function(String) validate;
-  customFormField(this.txt, this.ctrl, this.validate);
+  //final String Function(String) validate;
+  customFormField(this.txt, this.ctrl);
 
   @override
   Widget build(BuildContext context) {
@@ -207,7 +225,7 @@ class customFormField extends StatelessWidget {
         TextFormField(
       minLines: 1,
       maxLines: 3,
-      validator: validate, //put in a validator for only
+      //  validator: validate, //put in a validator for only
       controller: ctrl,
       autovalidateMode: AutovalidateMode.always,
       //obscureText: pwd,
@@ -343,6 +361,7 @@ class PartyCard extends StatefulWidget {
 
 class PartyCardState extends State<PartyCard> {
   void dispose() {
+    //The function leaveParty is automatically called when the dialog box showing the party member is popped.
     leaveParty(
         widget.creator, widget.member, widget.memberName, widget.memberNumber);
     super.dispose();
@@ -572,6 +591,9 @@ class PartyCardState extends State<PartyCard> {
   }
 
   Future leaveParty(creator, member, memberName, memberNumber) async {
+    /*This function uses a transaction to remove the user data from the party doc
+     after the user decides to leave the party.
+     */
     DocumentReference docRef =
         FirebaseFirestore.instance.collection('Parties').doc(creator);
 
@@ -583,10 +605,6 @@ class PartyCardState extends State<PartyCard> {
           if (!snapshot.exists) {
             throw Exception("User does not exist!");
           }
-
-          // Update the follower count based on the current count
-          // Note: this could be done without a transaction
-          // by updating the population using FieldValue.increment()
 
           int newMemberCount = snapshot.get('memberCount') - 1;
 
