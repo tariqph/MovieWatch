@@ -51,8 +51,7 @@ class JoinPartyState extends State<JoinParty> {
         backgroundColor: Colors.white,
         //Base Scaffold is build first with the search bar is build without the future builder
         appBar: AppBar(
-          title:
-          Text('Join Party'),
+          title: Text('Join Party'),
         ),
         floatingActionButton: Container(
           //floating action button to refresh the Parties created by friends
@@ -80,8 +79,7 @@ class JoinPartyState extends State<JoinParty> {
         body: Column(mainAxisSize: MainAxisSize.min, children: [
           Container(
               padding: EdgeInsets.all(10),
-              child: customFormField(
-                  "Search for Parties", searchParty)),
+              child: customFormField("Search for Parties", searchParty)),
           (showFriends) //ternary operator used, if showFriends is true then parties created
               //  by users who are already friends is listed(if present)
               ? FutureBuilder(
@@ -101,16 +99,17 @@ class JoinPartyState extends State<JoinParty> {
                           });
                     } else {
                       return Container(
-                        height: ((MediaQuery.of(context).size.height)*0.6),
-                        child:
-                        Column(
-                        children:[Spacer(),
-                        Center(
-                        child: Container(
-                          child: CircularProgressIndicator(
-                              valueColor: new AlwaysStoppedAnimation<Color>(
-                                  Colors.blue)))),
-                        Spacer()]));
+                          height: ((MediaQuery.of(context).size.height) * 0.6),
+                          child: Column(children: [
+                            Spacer(),
+                            Center(
+                                child: Container(
+                                    child: CircularProgressIndicator(
+                                        valueColor:
+                                            new AlwaysStoppedAnimation<Color>(
+                                                Colors.blue)))),
+                            Spacer()
+                          ]));
                     }
                   })
               : (isSearching)
