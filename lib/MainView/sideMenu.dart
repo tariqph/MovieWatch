@@ -16,18 +16,7 @@ class sideMenu extends StatelessWidget {
       showDialog(
           context: context,
           builder: (BuildContext context) {
-            return /*FractionallySizedBox(
-            heightFactor: 0.75,
-              widthFactor: 0.85,
-              child:Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                  color: Colors.red,
-                ),
-
-                //color: Colors.red,
-
-              child:*/AlertDialog(
+            return AlertDialog(
               title: Text("Logout"),
               content: Text("Are you sure? "),
               actions: <Widget>[
@@ -58,9 +47,9 @@ class sideMenu extends StatelessWidget {
           });
     }
 
-    return Container(
+    return /*Container(
       width: 250,
-      child: Drawer(
+      child: */Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
@@ -116,6 +105,7 @@ class sideMenu extends StatelessWidget {
           ),
         ],
       ),
-    ),);
+   // ),
+    );
   }
 }

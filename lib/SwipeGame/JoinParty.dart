@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:watchmovie/Data_Structures/dataStruct.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:watchmovie/SwipeGame/GameView.dart';
 
 class JoinParty extends StatefulWidget {
   @override
@@ -159,6 +160,8 @@ class JoinPartyState extends State<JoinParty> {
     List searchArray = [];
     //List len = [];
 
+    //check this function later for async functionality and limit the number of friends to 10
+
     await FirebaseFirestore.instance
         .collection("FriendPairs")
         .where("friend1", isEqualTo: username)
@@ -193,8 +196,7 @@ class JoinPartyState extends State<JoinParty> {
 
   Future getParty(String username) async {
 /*
-    Function to get the pending friend requests which retrieves
-    documents from FriendPair collection
+  This function gets the parties from the search functionality
  */
     var wht = await FirebaseFirestore.instance
         .collection("Parties")
@@ -315,18 +317,20 @@ class customTile extends StatelessWidget {
       }
 
       newMemberCount = snapshot.get('memberCount') + 1;
-      var member = snapshot.get('member');
-      var memberName = snapshot.get('memberName');
+      var members = snapshot.get('member');
+      var membersName = snapshot.get('memberName');
 
-      member.add(userData.username);
-      memberName.add(userData.fullname);
+      members.add(userData.username);
+      membersName.add(userData.fullname);
 
       // Perform an update on the document
-      transaction.update(docRef, {
+      transaction.set(docRef, {
         'memberCount': newMemberCount,
-        'member': member,
-        'memberName': memberName,
-      });
+        'member': members,
+        'memberName': membersName,
+        member : []
+      },SetOptions(merge: true)
+      );
 
       // return newMemberCount;
     }).then((value) {
@@ -361,10 +365,15 @@ class PartyCard extends StatefulWidget {
 class PartyCardState extends State<PartyCard> {
   void dispose() {
     //The function leaveParty is automatically called when the dialog box showing the party member is popped.
-    leaveParty(
-        widget.creator, widget.member, widget.memberName, widget.memberNumber);
+
+   if(partyStarted == 'no') {
+     leaveParty(
+         widget.creator, widget.member, widget.memberName, widget.memberNumber);
+   }
     super.dispose();
   }
+
+  String partyStarted = 'no';
 
   @override
   Widget build(BuildContext context) {
@@ -398,10 +407,7 @@ class PartyCardState extends State<PartyCard> {
                               SizedBox(
                                 height: 50,
                               ),
-                              CircleAvatar(
-                                radius: 60,
-                                backgroundColor: Colors.grey[600],
-                              ),
+
                               SizedBox(
                                 height: 20,
                               ),
@@ -554,7 +560,19 @@ class PartyCardState extends State<PartyCard> {
                                                       'no')
                                                   ? Colors.green[200]
                                                   : Colors.green[800],
-                                              onPressed: () {},
+                                              onPressed: () {
+                                                if(snapshot.data.get('partyStarted') == 'yes'){
+                                                  setState(() {
+                                                    partyStarted = 'yes';
+                                                  });
+
+                                                  Navigator.pushAndRemoveUntil(context,
+                                                    MaterialPageRoute(builder: (BuildContext context) =>
+                                                        GameView(widget.creator, widget.member)),
+                                                        (_) => false, );
+                                                }
+
+                                              },
                                             ),
                                             IconButton(
                                               // padding: EdgeInsets.all(5),
@@ -565,7 +583,8 @@ class PartyCardState extends State<PartyCard> {
                                                 Navigator.of(context).pop();
                                               },
                                             )
-                                          ]))))
+                                          ])
+                                  )))
                         ])));
           } else {
             return FractionallySizedBox(

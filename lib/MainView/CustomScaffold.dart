@@ -5,33 +5,56 @@ import '../Dismissible_moviecard/dismissibleCard.dart';
 import '../Data_Structures/dataStruct.dart';
 import 'sideMenu.dart';
 
-class CustomScaffold extends StatelessWidget {
+
+class CustomScaffold extends StatefulWidget{
+  final UserData userData;
+
+  CustomScaffold(this.userData);
+  @override
+  State<StatefulWidget> createState() {
+    return CustomScaffoldState();
+  }
+
+}
+
+class CustomScaffoldState extends State<CustomScaffold> {
+
+  Future future;
+
+  @override
+  void initState() {
+    future = getMovieData();
+    super.initState();
+  }
   /*
   Scaffold for the main screen with Dismissible moviecards
    */
-  final List<MovieData> movies;
-  final UserData userData;
+  //final List<MovieData> movies;
+  List<MovieData> movies = [];
 
-  CustomScaffold(this.movies, this.userData);
+
   @override
   Widget build(BuildContext context) {
+
+    //print('again');
+
     return Scaffold(
+
       backgroundColor: Colors.indigo[50],
-      drawer: sideMenu(userData.username),
+      drawer: sideMenu(widget.userData.username),
 
       //top Navigation bar
       appBar: AppBar(
-
-       // shadowColor: Colors.black,
+        // shadowColor: Colors.black,
         //leading: Icon(Icons.menu),
-      /*  title: Text(userData.username,overflow: TextOverflow.ellipsis,
+        /*  title: Text(userData.username,overflow: TextOverflow.ellipsis,
         style: TextStyle(color: Colors.white),),*/
         actions: [
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 30),
             child: Row(
               children: [
-                customNotification(userData.username),
+                customNotification(widget.userData.username),
                 SizedBox(
                   width: 15,
                 ),
@@ -53,7 +76,7 @@ class CustomScaffold extends StatelessWidget {
                   //tooltip: 'Increase volume by 10',
                   onPressed: () {
                     Navigator.pushNamed(context, '/friendtabs',
-                        arguments: userData);
+                        arguments: widget.userData);
                   },
                 )
               ],
@@ -64,8 +87,44 @@ class CustomScaffold extends StatelessWidget {
         elevation: 0,
       ),
 
-      body: dismissibleCard(movies),
+      body:  FutureBuilder(
+          future: future,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+             // print(snapshot.data);
+              var mData = snapshot.data;
+
+              for (int i = 0; i < snapshot.data.length; i++) {
+                movies.add(MovieData(
+                    mData[i].get('title'),
+                    mData[i].get('duration'),
+                    mData[i].get('year'),
+                    mData[i].get('genre'),
+                    mData[i].get('synopsis'),
+                    mData[i].get('image'),
+                    mData[i].get('id'),
+                    mData[i].get('platform')));
+              }
+             // movies.shuffle();
+
+              return dismissibleCard(movies, 'no', widget.userData.username, widget.userData.username);
+            }
+            else {
+              return Container(
+                  height: ((MediaQuery.of(context).size.height) * 0.6),
+                  child: Column(children: [
+                    Spacer(),
+                    Center(
+                        child: Container(
+                            child: CircularProgressIndicator(
+                                valueColor: new AlwaysStoppedAnimation<Color>(
+                                    Colors.blue)))),
+                    Spacer()
+                  ]));
+            }
+          }),
       //body with the Dismissible Card
+
 
       //bottom Navigation bar
       bottomNavigationBar:
@@ -77,33 +136,31 @@ class CustomScaffold extends StatelessWidget {
         color: Colors.indigo[50],
         //clipBehavior: Clip.hardEdge,
         child: Column(mainAxisSize: MainAxisSize.min, children: [
-           Row(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-               Spacer(),
-                Container(
-
-                  height: 60,
-                  //color: Colors.indigo[700],
-                  width: ((MediaQuery.of(context).size.width) / 2) - 10,
-                  child: RaisedButton(
-                       elevation: 10,
-                      shape: RoundedRectangleBorder(
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Spacer(),
+              Container(
+                height: 60,
+                //color: Colors.indigo[700],
+                width: ((MediaQuery.of(context).size.width) / 2) - 10,
+                child: RaisedButton(
+                    elevation: 10,
+                    shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(15.0),
-                      bottomLeft: Radius.circular(15.0)),
+                          topLeft: Radius.circular(15.0),
+                          bottomLeft: Radius.circular(15.0)),
                     ),
-                      child: Text("Throw PARTY"),
-                      color: Colors.indigo[900],
-                      textColor: Colors.white,
-                      onPressed: () {
-                         startParty(userData.username, userData.fullname);
-                         Navigator.pushNamed(context, '/startParty',
-                             arguments: userData);
-
-                      }),
-                ),
-                /* Spacer(),
+                    child: Text("Throw PARTY"),
+                    color: Colors.indigo[900],
+                    textColor: Colors.white,
+                    onPressed: () {
+                      startParty(widget.userData.username, widget.userData.fullname);
+                      Navigator.pushNamed(context, '/startParty',
+                          arguments: widget.userData);
+                    }),
+              ),
+              /* Spacer(),
               SizedBox(
                 width: 0.5,
                 height: 50,
@@ -112,36 +169,32 @@ class CustomScaffold extends StatelessWidget {
                 ),
               ),
               Spacer()*/
-                //Spacer(),
-                SizedBox(
-                  width: 1,
-                ),
-                Container(
-                  height: 60,
-                  // color: Colors.indigo[700],
-                  width: ((MediaQuery.of(context).size.width) / 2) - 10,
-                  child: RaisedButton(
+              //Spacer(),
+              SizedBox(
+                width: 1,
+              ),
+              Container(
+                height: 60,
+                // color: Colors.indigo[700],
+                width: ((MediaQuery.of(context).size.width) / 2) - 10,
+                child: RaisedButton(
                     elevation: 10,
-                      shape: RoundedRectangleBorder(
+                    shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(15.0),
-                      bottomRight: Radius.circular(15.0)),
+                          topRight: Radius.circular(15.0),
+                          bottomRight: Radius.circular(15.0)),
                     ),
-
-                      child:
-                      Text("Join PARTY"),
-                      color: Colors.indigo[900],
-                      textColor: Colors.white,
-                      onPressed: () async{
-
-                        Navigator.pushNamed(context, '/joinParty',
-                            arguments: userData);
-                      }),
-                ),
-                Spacer()
-              ],
-            ),
-
+                    child: Text("Join PARTY"),
+                    color: Colors.indigo[900],
+                    textColor: Colors.white,
+                    onPressed: () async {
+                      Navigator.pushNamed(context, '/joinParty',
+                          arguments: widget.userData);
+                    }),
+              ),
+              Spacer()
+            ],
+          ),
           SizedBox(
             height: 10,
           )
@@ -165,37 +218,65 @@ class CustomScaffold extends StatelessWidget {
     );
   }
 
-  Future startParty(String username, String fullname) async{
+  Future startParty(String username, String fullname) async {
+    var array = [];
 
-    var  array =[];
-
-    for ( int i = 4; i < username.length + 1; i++) {
-      array.add(username.substring(0,i).toLowerCase());
+    for (int i = 4; i < username.length + 1; i++) {
+      array.add(username.substring(0, i).toLowerCase());
     }
-    for ( int i = 4; i < fullname.length + 1; i++) {
-      array.add(fullname.substring(0,i).toLowerCase());
+    for (int i = 4; i < fullname.length + 1; i++) {
+      array.add(fullname.substring(0, i).toLowerCase());
     }
 
-
-    await FirebaseFirestore
-        .instance.collection('Parties')
+    await FirebaseFirestore.instance
+        .collection('Parties')
         .doc(username)
         .set({
-      'creator' : username,
-      'creatorName' : fullname,
-      'memberCount': 1,
-      'member' : [username],
-      'memberName' : [fullname],
-      'searchArray' : array,
-      'partyStarted' : 'no'
-    }
-    ).then((doc){
-
-    }).catchError((err){
-      print('Error creating document $err');
-    });
+          'creator': username,
+          'creatorName': fullname,
+          'memberCount': 1,
+          'member': [username],
+          'memberName': [fullname],
+          'searchArray': array,
+          'partyStarted': 'no',
+          'docRef': 'test',
+          'collectionRef' : 'Test',
+           username : []
+        })
+        .then((doc) {})
+        .catchError((err) {
+          print('Error creating document $err');
+        });
   }
 
+  Future getMovieData() async {
+    var arr = [];
+    await FirebaseFirestore.instance
+        .collection('MovieRef')
+        .doc('test')
+        .get()
+        .then((docs) async {
+      int length = docs.get('docRefs').length;
+      for (int i = 0; i < length / 5; i++) {
+        await FirebaseFirestore.instance
+            .collection('Test')
+            .doc(docs.get('docRefs')[i])
+            .get()
+            .then((docSnap) {
+          arr.add(docSnap);
+          if(i==(length/5)-1){
+            arr.shuffle();
+          }
+        }).catchError((onError) {
+          print(onError);
+        });
+      }
+    }).catchError((err) {
+      print('error');
+    });
+
+    return arr;
+  }
 
 
 }
@@ -227,9 +308,9 @@ class customNotificationState extends State<customNotification> {
             .where("friend2", isEqualTo: widget.username)
             .snapshots(),
         builder: (context, strm) {
-         // print((strm.hasError));
+          // print((strm.hasError));
 
-         // print(strm.connectionState);
+          // print(strm.connectionState);
           /*  if (strm.hasError) {
             print("here1");
             return Container(
@@ -288,7 +369,7 @@ class customNotificationState extends State<customNotification> {
                       notif = snapshot.data.length.toString();
                     }
 
-                   // print("here4");
+                    // print("here4");
                     return Container(
                       decoration: BoxDecoration(
                         shape: BoxShape.rectangle,
@@ -369,9 +450,8 @@ class customNotificationState extends State<customNotification> {
                         ));
                   }
                 } else {
-                 // print("here6");
-                  return
-                    Container(
+                  // print("here6");
+                  return Container(
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                       ),

@@ -9,6 +9,9 @@ class MovieCard extends StatelessWidget {
       this.title, this.dur, this.year, this.genre, this.synopsis, this.image, this.platform);
   @override
   Widget build(BuildContext context) {
+
+    var height = (MediaQuery.of(context).size.height);
+
     return Container(
       //height: 600,
       decoration: BoxDecoration(
@@ -36,8 +39,9 @@ class MovieCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             SizedBox(
-              height: 30,
-              width: 30,
+              height: height/27,
+             /* height: 30,
+              width: 30,*/
             ),
             // Expanded(
             //here
@@ -49,7 +53,8 @@ class MovieCard extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     textScaleFactor: 1.8)),
             SizedBox(
-              height: 2,
+              height: height/445,
+              //height: 2,
               width: 30,
             ),
     /*        Container(
@@ -65,12 +70,14 @@ class MovieCard extends StatelessWidget {
             ),*/
             //  SizedBox.expand(,
             Container(
-              height: 230,
+              height: height/3.87,
+              //height: 230,
 
                child:FittedBox(
                fit: BoxFit.fill,
                 child:
                 FadeInImage.assetNetwork(
+                 // fadeInDuration: Duration(milliseconds: 700),
                   placeholder: "assets/images/placeholder.png",
                   image: image,
                 ),
@@ -78,9 +85,11 @@ class MovieCard extends StatelessWidget {
                   image,
                 ),*/
       ),),
+
             // ),
             SizedBox(
-              height: 30,
+              height: height/27,
+              //height: 30,
               width: 30,
             ),
             //Expanded(
@@ -95,7 +104,8 @@ class MovieCard extends StatelessWidget {
                   Flexible(
                       child: Image(
                     image: AssetImage("assets/images/year.png"),
-                    height: 20,
+                   height: height/44.57,
+                   // height: 20,
                     width: 20,
                   )),
                   Flexible(
@@ -106,7 +116,8 @@ class MovieCard extends StatelessWidget {
                           textScaleFactor: 1.1)),
                   SizedBox(
                     width: 0.5,
-                    height: 30,
+                    height: height/27,
+                    //height: 30,
                     child: const DecoratedBox(
                       decoration: const BoxDecoration(color: Colors.grey),
                     ),
@@ -119,7 +130,8 @@ class MovieCard extends StatelessWidget {
                           textScaleFactor: 1.1)),
                   SizedBox(
                     width: 0.5,
-                    height: 30,
+                   height: height/27,
+                   // height: 30,
                     child: const DecoratedBox(
                       decoration: const BoxDecoration(color: Colors.grey),
                     ),
@@ -127,7 +139,8 @@ class MovieCard extends StatelessWidget {
                   Flexible(
                       child: Image(
                     image: AssetImage("assets/images/duration.png"),
-                    height: 20,
+                    height: height/44.57,
+                        //height: 20,
                     width: 20,
                   )),
                   Flexible(
@@ -138,7 +151,8 @@ class MovieCard extends StatelessWidget {
                           textScaleFactor: 1.1))
                 ])),
             SizedBox(
-              height: 30,
+              height: height/27,
+              //height: 30,
               width: 30,
             ),
             //Expanded(
@@ -155,7 +169,9 @@ class MovieCard extends StatelessWidget {
             Container(
               //color: Colors.blue,
               padding: EdgeInsets.all(20),
-              child: Text('$synopsis', textScaleFactor: 1.2),
+              child: Text('$synopsis', textScaleFactor: 1.2,
+               // overflow: TextOverflow.ellipsis,
+              ),
             ),
           ],
         ),

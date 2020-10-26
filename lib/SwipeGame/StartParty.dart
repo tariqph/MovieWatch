@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:watchmovie/Data_Structures/dataStruct.dart';
+import 'package:watchmovie/SwipeGame/GameView.dart';
 
 class StartParty extends StatefulWidget {
   @override
@@ -19,9 +20,13 @@ class StartPartyState extends State<StartParty> {
    the creator has the right to kick any user from the party.
   */
   UserData userData;
+  String partyStarted = 'no';
 
   void dispose() {
-    deleteParty(userData.username);
+
+    if(partyStarted == 'no') {
+      deleteParty(userData.username);
+    }
     super.dispose();
   }
 
@@ -48,7 +53,7 @@ class StartPartyState extends State<StartParty> {
             }
           int len =0;
 
-            print(snapshot.data.exists);
+            //print(snapshot.data.exists);
             if(snapshot.data.exists){
               len = snapshot.data.get('memberCount');
             }
@@ -61,7 +66,45 @@ class StartPartyState extends State<StartParty> {
                   return customTile(snapshot.data, index +1);
                 });
           },
-        ));
+        ),
+        bottomNavigationBar: BottomAppBar(
+          elevation: 0,
+          color: Colors.transparent,
+          child: Row(
+              mainAxisAlignment:
+              MainAxisAlignment.end,
+              children: [
+                IconButton(
+                  // padding: EdgeInsets.all(5),
+                  iconSize: 70,
+                  icon:
+                  Icon(Icons.play_circle_fill),
+                  color: Colors.green[800],
+                  onPressed: () {
+                    setState(() {
+                      partyStarted = 'yes';
+                    });
+                    partyStart(userData.username);
+                    Navigator.pushAndRemoveUntil(context,
+                        MaterialPageRoute(builder: (BuildContext context) =>
+                            GameView(userData.username, userData.username)),
+                            (_) => false, );
+
+                  },
+                ),
+                IconButton(
+                  // padding: EdgeInsets.all(5),
+                  iconSize: 70,
+                  icon: Icon(Icons.cancel),
+                  color: Colors.red,
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                )
+              ]),
+
+    ),
+    );
   }
 
   Future deleteParty(String username) async {
@@ -75,6 +118,16 @@ class StartPartyState extends State<StartParty> {
         .catchError((err) {
       print('Could not delete $err');
     });
+  }
+
+  Future partyStart(creator) async{
+
+    await FirebaseFirestore.instance
+        .collection('Parties')
+        .doc(creator)
+        .update({'partyStarted' : 'yes'})
+        .then((value) => print('party started'))
+        .catchError((onError) => print(onError));
   }
 }
 

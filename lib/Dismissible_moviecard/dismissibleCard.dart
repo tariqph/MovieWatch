@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
@@ -10,10 +11,13 @@ import '../Data_Structures/dataStruct.dart';
 // ignore: camel_case_types
 class dismissibleCard extends StatefulWidget {
   final List<MovieData> movies;
+  final String gameActive;
+  final username;
+  final creator;
 
 
   //MyApp({Key key}) : super(key: key);
-  dismissibleCard(this.movies);
+  dismissibleCard(this.movies, this.gameActive, this.username, this.creator);
 
   @override
   dismissibleCardState createState() {
@@ -24,7 +28,7 @@ class dismissibleCard extends StatefulWidget {
 // ignore: camel_case_types
 class dismissibleCardState extends State<dismissibleCard> with TickerProviderStateMixin{
   int index = 0;
-
+  var selectionArray = [];
 
 
   //here to
@@ -59,7 +63,7 @@ class dismissibleCardState extends State<dismissibleCard> with TickerProviderSta
   Widget build(BuildContext context) {
     //final title = 'Dismissing Items';
     _controller.forward();
-
+   print(index);
 
     return Directionality(
       textDirection: TextDirection.ltr,
@@ -100,13 +104,19 @@ class dismissibleCardState extends State<dismissibleCard> with TickerProviderSta
 
 
           onDismissed: (direction) {
-         if(direction == DismissDirection.endToStart){
+
+       if(widget.gameActive == 'yes'){
+         if(direction == DismissDirection.endToStart ){
            print('disliked');
+           selectionArray.add(0);
          }
          if(direction == DismissDirection.startToEnd){
            print('Liked');
+           selectionArray.add(1);
          }
-            // Remove the item from the data source.
+         updateMovieSelection(widget.creator, widget.username, selectionArray);
+          }
+
             setState(() {
           _controller.reset();
               index++;
@@ -115,6 +125,13 @@ class dismissibleCardState extends State<dismissibleCard> with TickerProviderSta
      // ),
     );
   }
-
+ Future updateMovieSelection(creator,  username, selectionArray) async{
+    await FirebaseFirestore.instance
+        .collection('Parties')
+        .doc(creator)
+        .update({username: selectionArray })
+        .then((value) => print('updated succesfully'))
+        .catchError((onError)=> print('update unsuccessful'));
+ }
 
 }
