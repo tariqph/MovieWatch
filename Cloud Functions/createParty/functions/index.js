@@ -23,7 +23,6 @@ exports.createParty = functions.region('asia-south1').firestore
         refList = docSnap.data()['docRefs'];
        // console.log(refList);
         shuffle(refList);
-
         return db.collection('ActiveParties')
         .doc(creator)
         .set({

@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:watchmovie/Data_Structures/dataStruct.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:watchmovie/Misc_widgets/circleImage.dart';
 import 'package:watchmovie/SwipeGame/GameView.dart';
 
 class JoinParty extends StatefulWidget {
@@ -31,6 +32,7 @@ class JoinPartyState extends State<JoinParty> {
 
   JoinPartyState() {
     searchParty.addListener(() {
+      //listener to th Textformfield
       if (searchParty.text.length > 3) {
         setState(() {
           isSearching = true;
@@ -49,10 +51,18 @@ class JoinPartyState extends State<JoinParty> {
     userData = ModalRoute.of(context).settings.arguments;
 
     return Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: baseColor,
         //Base Scaffold is build first with the search bar is build without the future builder
         appBar: AppBar(
-          title: Text('Join Party'),
+          iconTheme: IconThemeData(
+            color: Colors.black, //change your color here
+          ),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          title: Text(
+            'Join Party',
+            style: TextStyle(color: Colors.black),
+          ),
         ),
         floatingActionButton: Container(
           //floating action button to refresh the Parties created by friends
@@ -87,17 +97,21 @@ class JoinPartyState extends State<JoinParty> {
                   future: showParties(userData.username),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.done) {
-                      print(snapshot.data.docs.length);
-                      int len = snapshot.data.docs.length;
-                      var docs = snapshot.data.docs;
+                      if (snapshot.data != null) {
+                        print(snapshot.data.docs.length);
+                        int len = snapshot.data.docs.length;
+                        var docs = snapshot.data.docs;
 
-                      return ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: len,
-                          itemBuilder: (BuildContext context, int index) {
-                            // return Text('element$index');
-                            return customTile(docs[index], userData);
-                          });
+                        return ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: len,
+                            itemBuilder: (BuildContext context, int index) {
+                              // return Text('element$index');
+                              return customTile(docs[index], userData);
+                            });
+                      } else {
+                        return Container();
+                      }
                     } else {
                       return Container(
                           height: ((MediaQuery.of(context).size.height) * 0.6),
@@ -161,6 +175,8 @@ class JoinPartyState extends State<JoinParty> {
     //List len = [];
 
     //check this function later for async functionality and limit the number of friends to 10
+
+    //This function doesn't work if the user has no friends
 
     await FirebaseFirestore.instance
         .collection("FriendPairs")
@@ -272,10 +288,7 @@ class customTile extends StatelessWidget {
       //Divider(),
 
       ListTile(
-          leading: CircleAvatar(
-            //radius: 25,
-            backgroundImage: AssetImage('assets/images/avatar.png'),
-          ),
+          leading: circleImageAsset(50, 'assets/images/avatars/${partyDoc.get('avatars')[0]}.png'),
           title:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(
@@ -319,18 +332,23 @@ class customTile extends StatelessWidget {
       newMemberCount = snapshot.get('memberCount') + 1;
       var members = snapshot.get('member');
       var membersName = snapshot.get('memberName');
+      var avatars = snapshot.get('avatars');
 
       members.add(userData.username);
       membersName.add(userData.fullname);
+      avatars.add(userData.avatar);
 
       // Perform an update on the document
-      transaction.set(docRef, {
-        'memberCount': newMemberCount,
-        'member': members,
-        'memberName': membersName,
-        member : []
-      },SetOptions(merge: true)
-      );
+      transaction.set(
+          docRef,
+          {
+            'memberCount': newMemberCount,
+            'member': members,
+            'memberName': membersName,
+            'avatars': avatars,
+            member: []
+          },
+          SetOptions(merge: true));
 
       // return newMemberCount;
     }).then((value) {
@@ -366,10 +384,10 @@ class PartyCardState extends State<PartyCard> {
   void dispose() {
     //The function leaveParty is automatically called when the dialog box showing the party member is popped.
 
-   if(partyStarted == 'no') {
-     leaveParty(
-         widget.creator, widget.member, widget.memberName, widget.memberNumber);
-   }
+    if (partyStarted == 'no') {
+      leaveParty(widget.creator, widget.member, widget.memberName,
+          widget.memberNumber);
+    }
     super.dispose();
   }
 
@@ -407,7 +425,6 @@ class PartyCardState extends State<PartyCard> {
                               SizedBox(
                                 height: 50,
                               ),
-
                               SizedBox(
                                 height: 20,
                               ),
@@ -458,134 +475,170 @@ class PartyCardState extends State<PartyCard> {
           print(snapshot.data.exists);
 
           if (snapshot.data.exists) {
-            return FractionallySizedBox(
-                heightFactor: 0.6,
-                widthFactor: 0.9,
+            bool flag = false;
 
-                //color: Colors.red,
-                child: Card(
-                    //color: Colors.green[300],
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    elevation: 2,
-                    child: Column(
-                        //mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Flexible(
-                              flex: 4,
-                              child: FractionallySizedBox(
-                                  heightFactor: 1,
-                                  child: Center(
-                                      child: Text(
-                                    '${snapshot.data.get('creatorName')}\'s Party',
-                                    style: TextStyle(fontSize: 22),
-                                  )))),
-                          Row(children: <Widget>[
-                            Flexible(flex: 3, child: Divider()),
-                            Container(
-                              padding: EdgeInsets.symmetric(horizontal: 5),
-                              child: Text(
-                                "Friends Joined",
-                                style:
-                                    TextStyle(fontSize: 14, color: Colors.grey),
+            for (int i = 0; i < snapshot.data.get('member').length; i++) {
+              if (snapshot.data.get('member')[i] == widget.member) {
+                flag = true;
+              }
+            }
+            if (flag) {
+              return FractionallySizedBox(
+                  heightFactor: 0.6,
+                  widthFactor: 0.9,
+
+                  //color: Colors.red,
+                  child: Card(
+                      //color: Colors.green[300],
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      elevation: 2,
+                      child: Column(
+                          //mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Flexible(
+                                flex: 3,
+                                child: FractionallySizedBox(
+                                    heightFactor: 1,
+                                    child: Center(
+                                        child: Text(
+                                      '${snapshot.data.get('creatorName')}\'s Party',
+                                      style: TextStyle(fontSize: 22),
+                                    )))),
+                            Row(children: <Widget>[
+                              Flexible(flex: 3, child: Divider()),
+                              Container(
+                                padding: EdgeInsets.symmetric(horizontal: 5),
+                                child: Text(
+                                  "Friends Joined",
+                                  style: TextStyle(
+                                      fontSize: 14, color: Colors.grey),
+                                ),
                               ),
-                            ),
-                            Flexible(flex: 17, child: Divider()),
-                          ]),
-                          Flexible(
-                              flex: 12,
-                              child: FractionallySizedBox(
-                                  heightFactor: 1,
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: 0, horizontal: 40),
-                                    // color: Colors.red,
-                                    child: ListView.builder(
-                                        shrinkWrap: true,
-                                        itemExtent: 30,
-                                        itemCount:
-                                            snapshot.data.get('memberCount'),
-                                        itemBuilder:
-                                            (BuildContext context, int index) {
-                                          // return Text('element$index');
-                                          return ListTile(
-                                              dense: true,
-                                              contentPadding:
-                                                  EdgeInsets.symmetric(
-                                                      vertical: 0.0),
-
-                                              /*leading: Icon(Icons.stop_circle,
-                      color: Colors.green,
-                      size: 10,),*/
-                                              title: Row(
-                                                children: [
-                                                  Icon(
-                                                    Icons.stop_circle,
-                                                    color: Colors.green,
-                                                    size: 10,
-                                                  ),
-                                                  SizedBox(
-                                                    width: 5,
-                                                  ),
-                                                  Text(
-                                                    snapshot.data.get(
-                                                        'memberName')[index],
-                                                    style:
-                                                        TextStyle(fontSize: 16),
-                                                  )
-                                                ],
-                                              ));
-                                        }),
-                                  ))),
-                          Flexible(
-                              flex: 4,
-                              child: FractionallySizedBox(
-                                  heightFactor: 1,
-                                  child: Container(
+                              Flexible(flex: 17, child: Divider()),
+                            ]),
+                            Flexible(
+                                flex: 12,
+                                child: FractionallySizedBox(
+                                    heightFactor: 1,
+                                    child: Container(
                                       padding: EdgeInsets.symmetric(
-                                        horizontal: 10,
-                                      ),
-                                      child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.end,
-                                          children: [
-                                            IconButton(
-                                              // padding: EdgeInsets.all(5),
-                                              iconSize: 70,
-                                              icon:
-                                                  Icon(Icons.play_circle_fill),
-                                              color: (snapshot.data.get(
+                                          vertical: 0, horizontal: 40),
+                                      // color: Colors.red,
+                                      child: ListView.builder(
+                                          shrinkWrap: true,
+                                          itemExtent: 50,
+                                          itemCount:
+                                              snapshot.data.get('memberCount'),
+                                          itemBuilder: (BuildContext context,
+                                              int index) {
+                                            // return Text('element$index');
+                                            return Container(
+                                              //margin: EdgeInsets.al,
+                                              height: 100,
+                                              child: ListTile(
+
+                                                //dense: true,
+                                                contentPadding:
+                                                    EdgeInsets.symmetric(
+                                                        vertical: 0),
+
+                                                /*leading: Icon(Icons.stop_circle,
+                      color: Colors.green,
+                      size: 10,),*/              leading: circleImageAsset(40,
+                                                  'assets/images/avatars/'
+                                                      '${snapshot.data.get(
+                                                      'avatars')[index]}.png'),
+                                                title: Row(
+                                                  children: [
+
+                                                    Text(
+                                                      snapshot.data.get(
+                                                          'memberName')[index],
+                                                      style: TextStyle(
+                                                          fontSize: 16),
+                                                    )
+                                                  ],
+                                                )));
+                                          }),
+                                    ))),
+                            Flexible(
+                                flex: 4,
+                                child: FractionallySizedBox(
+                                    heightFactor: 1,
+                                    child: Container(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 10,
+                                        ),
+                                        child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            children: [
+                                              IconButton(
+                                                // padding: EdgeInsets.all(5),
+                                                iconSize: 70,
+                                                icon: Icon(
+                                                    Icons.play_circle_fill),
+                                                color: (snapshot.data.get(
+                                                            'partyStarted') ==
+                                                        'no')
+                                                    ? Colors.green[200]
+                                                    : Colors.green[800],
+                                                onPressed: () {
+                                                  if (snapshot.data.get(
                                                           'partyStarted') ==
-                                                      'no')
-                                                  ? Colors.green[200]
-                                                  : Colors.green[800],
-                                              onPressed: () {
-                                                if(snapshot.data.get('partyStarted') == 'yes'){
-                                                  setState(() {
-                                                    partyStarted = 'yes';
-                                                  });
+                                                      'yes') {
+                                                    setState(() {
+                                                      partyStarted = 'yes';
+                                                    });
 
-                                                  Navigator.pushAndRemoveUntil(context,
-                                                    MaterialPageRoute(builder: (BuildContext context) =>
-                                                        GameView(widget.creator, widget.member)),
-                                                        (_) => false, );
-                                                }
+                                                    Navigator
+                                                        .pushAndRemoveUntil(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (BuildContext
+                                                                  context) =>
+                                                              GameView(
+                                                                  widget
+                                                                      .creator,
+                                                                  widget
+                                                                      .member)),
+                                                      (_) => false,
+                                                    );
+                                                  }
+                                                },
+                                              ),
+                                              IconButton(
+                                                // padding: EdgeInsets.all(5),
+                                                iconSize: 70,
+                                                icon: Icon(Icons.cancel),
+                                                color: Colors.red,
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                              )
+                                            ]))))
+                          ])));
+            } else {
+              return FractionallySizedBox(
+                  heightFactor: 0.6,
+                  widthFactor: 0.9,
 
-                                              },
-                                            ),
-                                            IconButton(
-                                              // padding: EdgeInsets.all(5),
-                                              iconSize: 70,
-                                              icon: Icon(Icons.cancel),
-                                              color: Colors.red,
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                            )
-                                          ])
-                                  )))
-                        ])));
+                  //color: Colors.red,
+                  child: Card(
+                      //color: Colors.green[300],
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      elevation: 2,
+                      child: Center(
+                        child: Text(
+                          "You've been Booted",
+                          style: TextStyle(fontSize: 30),
+                        ),
+                      )));
+            }
           } else {
             return FractionallySizedBox(
                 heightFactor: 0.6,
@@ -624,14 +677,34 @@ class PartyCardState extends State<PartyCard> {
             throw Exception("User does not exist!");
           }
 
-          int newMemberCount = snapshot.get('memberCount') - 1;
+         // int newMemberCount = snapshot.get('memberCount') - 1;
+
+          int newMemberCount = 0;
+
+          var members = snapshot.get('member');
+          var membersName = snapshot.get('memberName');
+          var avatars = snapshot.get('avatars');
+
+          var newMembers = [];
+          var newMembersName = [];
+          var newAvatars = [];
+
+          for (int i = 0; i < members.length; i++) {
+            if (members[i] != member) {
+              newMembers.add(members[i]);
+              newMembersName.add(membersName[i]);
+              newAvatars.add(avatars[i]);
+              newMemberCount++;
+            }
+          }
 
           // Perform an update on the document
           transaction.update(docRef, {
             'memberCount': newMemberCount,
-            'member': FieldValue.arrayRemove(
-                [member]), //arrayRemove will remove all members from same name
-            'memberName': FieldValue.arrayRemove([memberName]),
+            'member':
+                newMembers, //arrayRemove will remove all members from same name
+            'memberName': newMembersName,
+            'avatars': newAvatars
           });
         })
         .then((value) => print("member count updated"))

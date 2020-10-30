@@ -32,7 +32,7 @@ class _SplashPageState extends State<SplashPage> {
                        // print("I'm here111"),
                         //print(s.data()['username']),
                         Navigator.pushReplacementNamed(context, '/home',
-                            arguments: UserData(s.get('fullname'), s.get('email'), s.get('username'))
+                            arguments: UserData(s.get('fullname'), s.get('email'), s.get('username'), s.get('avatar'))
                            )
                             /*MaterialPageRoute(
                                     builder: (context) =>
@@ -49,13 +49,13 @@ class _SplashPageState extends State<SplashPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.indigo[900],
+      backgroundColor: Colors.red[200],
       body: Center(
         child: Container(
           child: Text("WatchParty",
               style: TextStyle(
                   fontSize: 40,
-                  color: Colors.white,
+                  color: Colors.black,
                   fontWeight: FontWeight.bold)),
         ),
       ),

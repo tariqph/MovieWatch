@@ -229,13 +229,14 @@ class signUpViewState extends State<signInView> {
           "fullname": fullNameController.text,
           "username": usernameController.text,
           "email": emailController.text,
-         "searchArray" : array
+         "searchArray" : array,
+         "avatar" : 'av6'
         })
             .then((result) => {
           Navigator.pushNamedAndRemoveUntil(
               context,
              '/home', (_) => false,arguments:
-          UserData(fullNameController.text, emailController.text, usernameController.text))
+          UserData(fullNameController.text, emailController.text, usernameController.text, 'av6'))
              /* MaterialPageRoute(
                   builder: (context) => homeView(usernameController.text)),
                   (_) => false*/
@@ -339,19 +340,24 @@ class customFormField extends StatelessWidget {
       controller: ctrl,
       obscureText: pwd,
       decoration: InputDecoration(
-        hintText: txt,
-        fillColor: Colors.black.withOpacity(0.1),
+        labelStyle: TextStyle(
+            color: Colors.grey,
+            fontSize: 18
+        ),
+        contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+        labelText: txt,
+       // fillColor: Colors.black.withOpacity(0.4),
         filled: true,
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10.0),
+          borderRadius: BorderRadius.circular(15.0),
           borderSide:
-              BorderSide(color: Colors.black.withOpacity(0.6), width: 3),
+              BorderSide(color: Colors.black.withOpacity(0.6), width: 1.5),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
           borderSide: BorderSide(
             color: Colors.black.withOpacity(0.05),
-            width: 2.0,
+            width: 1,
           ),
         ),
       ),

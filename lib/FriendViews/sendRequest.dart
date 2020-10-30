@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:watchmovie/Data_Structures/dataStruct.dart';
 import 'package:watchmovie/FriendViews/friendCard.dart';
+import 'package:watchmovie/Misc_widgets/circleImage.dart';
 
 // ignore: camel_case_types
 class sendRequest extends StatefulWidget {
@@ -103,11 +104,11 @@ class sendRequestState extends State<sendRequest> {
     return wht.docs;
   }
 
-  void send(String friend1, String friend1name,String friend2, String friend2name) async {
+/*  void send(String friend1, String friend1name,String friend2, String friend2name) async {
 
-    /* Function to sen friend requests which creates a doc
+    *//* Function to sen friend requests which creates a doc
     in FriendPair collection
-     */
+     *//*
     await FirebaseFirestore.instance
         .collection("FriendPairs")
         .add(
@@ -121,7 +122,7 @@ class sendRequestState extends State<sendRequest> {
     )
         .then((value) => print("User Added"))
         .catchError((error) => print("Failed to add user: $error"));
-  }
+  }*/
 
   /*String searchValidator(String value) {
     if (!(value == value.toLowerCase())) {
@@ -180,14 +181,14 @@ class customTile extends StatelessWidget {
   /* Custom tile object for all pending friend request with
    nested buttons for accepting and declining requests  */
   // This tile is called by a dynamic Listview
-  final name;
+  final friendData;
   final userData;
-  TextEditingController search;
-  customTile(this.name,this.userData,this.search);
+  TextEditingController search;//no use
+  customTile(this.friendData,this.userData,this.search);
 
   @override
   Widget build(BuildContext context) {
-    if(userData.username == name.get('username')){
+    if(userData.username == friendData.get('username')){
       return Container();
     }
     else {
@@ -198,20 +199,18 @@ class customTile extends StatelessWidget {
 
             ListTile(
 
-                leading: CircleAvatar(
-                  //radius: 25,
-                  backgroundImage: AssetImage('assets/images/avatar.png'),
-                ),
+                leading:circleImageAsset(50, 'assets/images/avatars/${friendData.get('avatar')}.png'),
                 title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Text(
-                    name.get('username'),
+                    friendData.get('username'),
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                   ),
-                  Text(name.get('fullname'),
+                  Text(friendData.get('fullname'),
                       style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13, color: Colors.blueGrey))
                 ]),
                 onTap: () {
-                  popUp(context, name.get('username'),name.get('fullname'),userData.username,userData.fullname);
+                  popUp(context, friendData.get('username'),friendData.get('fullname'),userData.username,
+                    userData.fullname, userData.avatar,friendData.get('avatar'));
                  // search.clear();
 
                 }
@@ -233,11 +232,11 @@ class customTile extends StatelessWidget {
 
 
   }
-  Future<void> popUp(context, friendUsername,friendFullname,username, fullname)  async{
+  Future<void> popUp(context, friendUsername,friendFullname,username, fullname, friend1avatar, friend2avatar)  async{
     showDialog(
         context: context,
         builder: (BuildContext context) {
-          return friendCard(username, friendUsername, friendFullname,fullname);
+          return friendCard(username, friendUsername, friendFullname,fullname, friend1avatar, friend2avatar);
         });
   }
 

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:watchmovie/Data_Structures/globals.dart';
 import '../Dismissible_moviecard/dismissibleCard.dart';
 import '../Data_Structures/dataStruct.dart';
 import 'sideMenu.dart';
@@ -21,9 +22,11 @@ class CustomScaffoldState extends State<CustomScaffold> {
 
   Future future;
 
+
   @override
   void initState() {
     future = getMovieData();
+    avatarId = widget.userData.avatar;
     super.initState();
   }
   /*
@@ -32,19 +35,30 @@ class CustomScaffoldState extends State<CustomScaffold> {
   //final List<MovieData> movies;
   List<MovieData> movies = [];
 
+  chngAvatar(newId){
+    setState(() {
+      avatarId = newId;
+    });
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
 
-    //print('again');
+   // print(avatarId);
+
 
     return Scaffold(
 
-      backgroundColor: Colors.indigo[50],
-      drawer: sideMenu(widget.userData.username),
+      backgroundColor: baseColor,
+      drawer: sideMenu(widget.userData.username, chngAvatar),
 
       //top Navigation bar
       appBar: AppBar(
+        iconTheme: IconThemeData(
+          color: Colors.black, //change your color here
+        ),
         // shadowColor: Colors.black,
         //leading: Icon(Icons.menu),
         /*  title: Text(userData.username,overflow: TextOverflow.ellipsis,
@@ -69,8 +83,9 @@ class CustomScaffoldState extends State<CustomScaffold> {
                         arguments: username);
                   },
                 )*/
-                IconButton(
-                  color: Colors.white,
+                Container(
+                child: IconButton(
+                  //color: Colors.white,
                   splashRadius: 25,
                   icon: Icon(Icons.face),
                   //tooltip: 'Increase volume by 10',
@@ -78,12 +93,12 @@ class CustomScaffoldState extends State<CustomScaffold> {
                     Navigator.pushNamed(context, '/friendtabs',
                         arguments: widget.userData);
                   },
-                )
+                ))
               ],
             ),
           ),
         ],
-        backgroundColor: Colors.indigo[900],
+        backgroundColor: Colors.transparent,
         elevation: 0,
       ),
 
@@ -133,7 +148,7 @@ class CustomScaffoldState extends State<CustomScaffold> {
         child: */
           BottomAppBar(
         elevation: 0,
-        color: Colors.indigo[50],
+        color: Colors.red[50],
         //clipBehavior: Clip.hardEdge,
         child: Column(mainAxisSize: MainAxisSize.min, children: [
           Row(
@@ -151,11 +166,17 @@ class CustomScaffoldState extends State<CustomScaffold> {
                           topLeft: Radius.circular(15.0),
                           bottomLeft: Radius.circular(15.0)),
                     ),
-                    child: Text("Throw PARTY"),
-                    color: Colors.indigo[900],
-                    textColor: Colors.white,
+                    child: Text("Throw PARTY",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 16
+                    ),),
+                    color: Colors.red[200],
+                    //color: Colors.indigo[900],
+                   // textColor: Colors.white,
                     onPressed: () {
-                      startParty(widget.userData.username, widget.userData.fullname);
+                      startParty(widget.userData.username, widget.userData.fullname,
+                          widget.userData.avatar);
                       Navigator.pushNamed(context, '/startParty',
                           arguments: widget.userData);
                     }),
@@ -184,9 +205,14 @@ class CustomScaffoldState extends State<CustomScaffold> {
                           topRight: Radius.circular(15.0),
                           bottomRight: Radius.circular(15.0)),
                     ),
-                    child: Text("Join PARTY"),
-                    color: Colors.indigo[900],
-                    textColor: Colors.white,
+                    child: Text("Join PARTY",
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16
+                      ),),
+                    color: Colors.deepOrange[200],
+                   // color: Colors.indigo[900],
+                    //textColor: Colors.black,
                     onPressed: () async {
                       Navigator.pushNamed(context, '/joinParty',
                           arguments: widget.userData);
@@ -218,7 +244,9 @@ class CustomScaffoldState extends State<CustomScaffold> {
     );
   }
 
-  Future startParty(String username, String fullname) async {
+  Future startParty(String username, String fullname, avatar) async {
+
+    //Function for when party starts
     var array = [];
 
     for (int i = 4; i < username.length + 1; i++) {
@@ -237,6 +265,7 @@ class CustomScaffoldState extends State<CustomScaffold> {
           'memberCount': 1,
           'member': [username],
           'memberName': [fullname],
+           'avatars' : [avatar],
           'searchArray': array,
           'partyStarted': 'no',
           'docRef': 'test',
@@ -298,14 +327,14 @@ class customNotificationState extends State<customNotification> {
   /* initState(){
   }
 */
-
-  Color color = Colors.white;
+  Color color = Colors.black;
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection("FriendPairs")
             .where("friend2", isEqualTo: widget.username)
+             .where("status", isEqualTo: 'pending')
             .snapshots(),
         builder: (context, strm) {
           // print((strm.hasError));
@@ -370,13 +399,26 @@ class customNotificationState extends State<customNotification> {
                     }
 
                     // print("here4");
-                    return Container(
+                    return
+                      InkWell(
+                        radius:  60,
+                          customBorder: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(40),
+                          ),
+                        onTap: (){
+                          Navigator.pushNamed(context, '/friendrequest',
+                              arguments: widget.username);
+                        },
+                      child:Container(
+                        margin: EdgeInsets.all(0),
                       decoration: BoxDecoration(
-                        shape: BoxShape.rectangle,
+                        shape: BoxShape.circle,
                       ),
-                      width: 30,
-                      height: 30,
+                      width: 35,
+                      height: 35,
                       child: Stack(
+
+                        alignment: Alignment.center,
                         children: [
                           IconButton(
                             //iconSize: 35,
@@ -385,10 +427,9 @@ class customNotificationState extends State<customNotification> {
                               Icons.notifications,
                               color: color,
                             ),
-                            onPressed: () {
-                              Navigator.pushNamed(context, '/friendrequest',
-                                  arguments: widget.username);
-                            },
+                           /*onPressed: () {
+
+                            },*/
                           ),
                           Container(
                             /*   width: 30,
@@ -416,7 +457,8 @@ class customNotificationState extends State<customNotification> {
                           ),
                         ],
                       ),
-                    );
+                    )
+                );
 
                     /* IconButton(
                       icon: Icon(
@@ -435,9 +477,10 @@ class customNotificationState extends State<customNotification> {
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                         ),
-                        height: 30,
-                        width: 30,
+                        height: 35,
+                        width: 35,
                         child: IconButton(
+                          splashRadius: 25,
                           // iconSize: 35,
                           icon: Icon(
                             Icons.notifications,
@@ -455,9 +498,10 @@ class customNotificationState extends State<customNotification> {
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                       ),
-                      height: 30,
-                      width: 30,
+                      height: 35,
+                      width: 35,
                       child: IconButton(
+                        splashRadius: 25,
                         //iconSize: 35,
                         icon: Icon(
                           Icons.notifications,
@@ -473,17 +517,6 @@ class customNotificationState extends State<customNotification> {
         });
   }
 
-/*
-  void _timer() {
-    Future.delayed(Duration(seconds: 3)).then((_) {
-      setState(() {
-        print("1 second closer to NYE!");
-        // Anything else you want
-      });
-      _timer();
-    });
-  }
-*/
 
   Future getData(String username) async {
 /*

@@ -138,7 +138,7 @@ class loginViewState extends State<loginView> {
               Navigator.pushNamedAndRemoveUntil(
                   context,
                   '/home', (_) => false,arguments:
-              UserData(result.get('fullname'), result.get('email'), result.get('username'))),
+              UserData(result.get('fullname'), result.get('email'), result.get('username'),result.get('avatar'))),
                   /*MaterialPageRoute(
                       builder: (context) => homeView(result.data()['username'])),*/
                      // (_) => false),
@@ -223,20 +223,26 @@ class customFormField extends StatelessWidget { //custom Textformfield for user 
     return TextFormField(
       controller: input,
       obscureText: pwd,
-      decoration: InputDecoration(
-        hintText: txt,
-        fillColor: Colors.black.withOpacity(0.1),
+      decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+        labelText: txt,
+       // floatingLabelBehavior:FloatingLabelBehavior.always,
+       // hintText: txt,
+        labelStyle: TextStyle(
+          color: Colors.black.withOpacity(0.4),
+              fontSize: 18
+        ),
+        //fillColor: Colors.black.withOpacity(0.1),
         filled: true,
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10.0),
+          borderRadius: BorderRadius.circular(15.0),
           borderSide:
-              BorderSide(color: Colors.black.withOpacity(0.6), width: 3),
+              BorderSide(color: Colors.black.withOpacity(0.6), width: 1.5),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
           borderSide: BorderSide(
             color: Colors.black.withOpacity(0.05),
-            width: 2.0,
+            width: 1.0,
           ),
         ),
       ),

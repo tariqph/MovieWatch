@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:watchmovie/Data_Structures/dataStruct.dart';
+import 'package:watchmovie/Misc_widgets/circleImage.dart';
 
 import 'friendCard.dart';
 
@@ -49,13 +50,15 @@ class FriendListState extends State<FriendList> /*with AutomaticKeepAliveClientM
                         shrinkWrap: true,
                   itemCount: len1,
                   itemBuilder: (BuildContext context, int index) {
-                    return customTile(rec[0][index].get('friend2'),rec[0][index].get('friend2name'), userData);
+                    return customTile(rec[0][index].get('friend2'),rec[0][index].get('friend2name'),
+                        userData, rec[0][index].get('friend2avatar'));
                   }),
                   ListView.builder(
                       shrinkWrap: true,
                       itemCount: len2,
                       itemBuilder: (BuildContext context, int index) {
-                        return customTile(rec[1][index].get('friend1'),rec[1][index].get('friend1name'), userData);
+                        return customTile(rec[1][index].get('friend1'),rec[1][index].get('friend1name'),
+                            userData, rec[1][index].get('friend1avatar'));
                       }),
               ]
             ));
@@ -97,9 +100,10 @@ class customTile extends StatelessWidget {
   final friendUsername;
   final friendFullname;
   final userData;
+  final friendAvatar;
 
 
-  customTile(this.friendUsername,this.friendFullname, this.userData);
+  customTile(this.friendUsername,this.friendFullname, this.userData, this.friendAvatar);
 
   @override
   Widget build(BuildContext context) {
@@ -114,10 +118,7 @@ class customTile extends StatelessWidget {
 
             ListTile(
 
-                leading: CircleAvatar(
-                  //radius: 25,
-                  backgroundImage: AssetImage('assets/images/avatar.png'),
-                ),
+                leading: circleImageAsset(50,'assets/images/avatars/$friendAvatar.png'),
                 title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Text(
                     friendUsername,
@@ -127,7 +128,8 @@ class customTile extends StatelessWidget {
                       style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13, color: Colors.blueGrey))
                 ]),
                 onTap: () {
-                  popUp(context, friendUsername,friendFullname,userData.username,userData.fullname);
+                  popUp(context, friendUsername,friendFullname,userData.username,userData.fullname,
+                  userData.avatar, friendAvatar);
 
 
                 }
@@ -149,11 +151,12 @@ class customTile extends StatelessWidget {
 
 
   }
-  Future<void> popUp(context, friendUsername,friendFullname,username, fullname)  async{
+  Future<void> popUp(context, friendUsername,friendFullname,username, fullname, friend1avatar, friend2avatar)  async{
     showDialog(
         context: context,
         builder: (BuildContext context) {
-          return friendCard(username, friendUsername, friendFullname,fullname);
+          return friendCard(username, friendUsername, friendFullname,fullname, friend1avatar
+          , friend2avatar);
         });
   }
 

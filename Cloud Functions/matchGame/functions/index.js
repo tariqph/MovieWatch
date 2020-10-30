@@ -38,10 +38,10 @@ exports.updateUser = functions.region('asia-south1').firestore
               for(j=0;j<memberCount;j++){
                count = count + newData[newData['member'][j]][i];
               }
-
               if(count === memberCount){
                   flag = 'yes';
                   position = i;
+                  break;
               }
           }
 
@@ -51,22 +51,39 @@ exports.updateUser = functions.region('asia-south1').firestore
          if(flag === 'yes'){
 
             return await
-            db.collection('ActiveParties')
+            db
+            .collection('ActiveParties')
             .doc(newData['creator'])
-            .update({
-                'match':flag,
-                'matchRef': position
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-            
+            .get()
+            .then((docSnap)=> {
+                collecRef = docSnap.data()['collectionRef'];
+                docRef = docSnap.data()['docRefs'][position];
+                return db
+                .collection(collecRef)
+                .doc(docRef)
+                .get();
+            }).then((movieDoc)=>{
+                    return  db
+                    .collection('ActiveParties')
+                    .doc(newData['creator'])
+                    .set({ 'match': flag,
+                     'matchRef' : position,
+                     'movie': movieDoc.data()
+                }
+                ,{merge:true});
+            }).then((dat)=>{
+                console.log('data written successfully')
+                return null;
+                    
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
          }
 
          else{
              return null;
          }
-
 
       }
       // perform desired operations ...

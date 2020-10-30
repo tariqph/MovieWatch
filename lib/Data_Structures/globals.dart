@@ -1,0 +1,3 @@
+library singleton;
+
+String avatarId;

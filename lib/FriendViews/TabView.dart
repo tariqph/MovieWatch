@@ -11,19 +11,29 @@ class TabView extends StatelessWidget {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
+        backgroundColor: Colors.red[50],
         appBar: AppBar(
-          bottom: TabBar(
+          iconTheme: IconThemeData(
+            color: Colors.black, //change your color here
+          ),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          title: TabBar(
+            indicatorColor: Colors.black,
             tabs: [
               Tab(//\icon: Icon(Icons.directions_car,
                // color: Colors.blue), text: "Send Request",
-                  child: Text("Send Request",
-                    style: TextStyle(fontSize: 20),
-                  )
+                  child: Text("Send Requests",
+                    style: TextStyle(fontSize: 16,
+                    color: Colors.black),
+                  ),
+
               ),
               Tab(//icon: Icon(Icons.boot),
                 //text: "Friends",
                 child: Text("Friends",
-                  style: TextStyle(fontSize: 20),
+                  style: TextStyle(fontSize: 16,
+                      color: Colors.black),
                 ),
                 ),
             ],

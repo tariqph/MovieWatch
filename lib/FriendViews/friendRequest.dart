@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:watchmovie/Misc_widgets/circleImage.dart';
 
 // ignore: camel_case_types
 class friendRequest extends StatefulWidget {
@@ -16,8 +17,7 @@ class friendRequest extends StatefulWidget {
 class friendRequestState extends State<friendRequest> {
   //final String username = "tariqph";
 
-  void dispose(){
-
+  void dispose() {
     print('exit');
     super.dispose();
   }
@@ -36,29 +36,51 @@ class friendRequestState extends State<friendRequest> {
             //conditional for when documents are retrieved
             //Map<String, dynamic> data = snapshot.data.data();
             var rec = snapshot.data;
-            //print(rec);
-            //print("hh");
+
             int len = rec.length;
-            //print(len);
-            //print("jj");
+
 
             return Scaffold(
+              backgroundColor: Colors.red[50],
               appBar: AppBar(
-                title: Text("Friend Requests"),
-                backgroundColor: Colors.indigo[900],
+                iconTheme: IconThemeData(
+                  color: Colors.black, //change your color here
+                ),
+                title: Text("Friend Requests",
+                style: TextStyle(
+                    fontSize: 18,
+                  color: Colors.black
+                ),),
+                backgroundColor: Colors.transparent,
+                elevation: 0,
               ),
-              body: ListView.builder(
+              body:Column(
+              children: [Divider(
+                height: 5,
+                thickness: 2,
+                //color: Colors.black,
+              ),ListView.builder(
+                shrinkWrap: true,
                   itemCount: len,
                   itemBuilder: (BuildContext context, int index) {
                     return customTile(
                         rec[index], declineRequest, acceptRequest);
-                  }),
+                  })]),
             );
           } else {
             return Scaffold(
               appBar: AppBar(
-                title: Text("Friend Requests"),
-                backgroundColor: Colors.indigo[900],
+                elevation: 0,
+                iconTheme: IconThemeData(
+                  color: Colors.black, //change your color here
+                ),
+                title: Text("Friend Requests",
+                    style: TextStyle(
+                        color: Colors.black,
+                            fontSize: 16
+                    )
+                ),
+                backgroundColor: Colors.transparent,
               ),
               body: Center(
                   child: CircularProgressIndicator(
@@ -126,29 +148,31 @@ class customTile extends StatelessWidget {
   /* Custom tile object for all pending friend request with
    nested buttons for accepting and declining requests  */
   // This tile is called by a dynamic Listview
-  final name;
+  final friendData;
   Function decline, accept;
-  customTile(this.name, this.decline, this.accept);
+  customTile(this.friendData, this.decline, this.accept);
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
+    return Column(mainAxisAlignment: MainAxisAlignment.start,
+        children: [
       ListTile(
-        leading: CircleAvatar(
-          //radius: 25,
-          backgroundImage: AssetImage('assets/images/avatar.png'),
-        ),
+        leading: circleImageAsset(50, 'assets/images/avatars/${friendData.get('friend1avatar')}.png'),
         title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text(
-            name.get('friend1'),
+            friendData.get('friend1'),
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
           ),
-          Text(name.get('friend1name'),
-              style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13, color: Colors.blueGrey))
+          Text(friendData.get('friend1name'),
+              style: TextStyle(
+                  fontWeight: FontWeight.normal,
+                  fontSize: 13,
+                  color: Colors.blueGrey))
         ]),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
-          children: [IconButton(
+          children: [
+            /*IconButton(
             //color: Colors.green,
             icon:Icon(Icons.check_circle,color: Colors.green,),
             iconSize: 50,
@@ -166,34 +190,37 @@ class customTile extends StatelessWidget {
                 await decline(name.get('friend1'), name.get('friend2'));
 
               },
-            ),
-           /* RaisedButton(
+            ),*/
+            RaisedButton(
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(4.0),
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(15.0),
+                      bottomLeft: Radius.circular(15.0)),
                 ),
                 child: Text("Accept"),
                 color: Colors.green[600],
                 textColor: Colors.white,
                 onPressed: () async {
-                  await accept(name.get('friend1'), name.get('friend2'));
+                  await accept(friendData.get('friend1'), friendData.get('friend2'));
                 }),
             SizedBox(
-              width: 4,
+              width: 1,
             ),
             RaisedButton(
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(4.0),
+                  borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(15.0),
+                      bottomRight: Radius.circular(15.0)),
                 ),
                 child: Text("Decline"),
                 color: Colors.red[600],
                 textColor: Colors.white,
                 onPressed: () async {
-                  await decline(name.get('friend1'), name.get('friend2'));
-                })*/
+                  await decline(friendData.get('friend1'), friendData.get('friend2'));
+                })
           ],
         ),
       ),
-      Divider()
     ]);
   }
 }

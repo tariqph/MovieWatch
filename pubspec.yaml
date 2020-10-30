@@ -59,6 +59,24 @@ flutter:
    - assets/images/primevideo.png
    - assets/images/avatar.png
    - assets/images/placeholder.png
+   - assets/images/match.png
+   - assets/images/avatars/av1.png
+   - assets/images/avatars/av2.png
+   - assets/images/avatars/av3.png
+   - assets/images/avatars/av4.png
+   - assets/images/avatars/av5.png
+   - assets/images/avatars/av6.png
+   - assets/images/avatars/av7.png
+   - assets/images/avatars/av8.png
+   - assets/images/avatars/av9.png
+   - assets/images/avatars/av10.png
+   - assets/images/avatars/av11.png
+   - assets/images/avatars/av12.png
+   - assets/images/avatars/av13.png
+   - assets/images/avatars/av14.png
+   - assets/images/avatars/av15.png
+   - assets/images/avatars/av16.png
+   - assets/images/avatars/av17.png
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

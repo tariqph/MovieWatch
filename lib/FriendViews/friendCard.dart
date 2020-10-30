@@ -9,9 +9,11 @@ class friendCard extends StatefulWidget {
   final friendUsername;
   final friendFullname;
   final fullname;
+  final friend1avatar;
+  final friend2avatar;
 
   friendCard(
-      this.username, this.friendUsername, this.friendFullname, this.fullname);
+      this.username, this.friendUsername, this.friendFullname, this.fullname, this.friend1avatar, this.friend2avatar);
 
   @override
   State<StatefulWidget> createState() {
@@ -36,17 +38,23 @@ class friendCardState extends State<friendCard> {
                   widget.friendUsername,
                   widget.friendFullname,
                   widget.fullname,
-                  snapshot.data[0][0].get('status'));
+                  snapshot.data[0][0].get('status'),
+              widget.friend1avatar,
+              widget.friend2avatar);
             } else if (snapshot.data[1].length == 1) {
               return fCard(
                   widget.username,
                   widget.friendUsername,
                   widget.friendFullname,
                   widget.fullname,
-                  snapshot.data[1][0].get('status'));
+                  snapshot.data[1][0].get('status'),
+                  widget.friend1avatar,
+                  widget.friend2avatar);
             } else {
               return fCard(widget.username, widget.friendUsername,
-                  widget.friendFullname, widget.fullname, 'notF');
+                  widget.friendFullname, widget.fullname, 'notF',
+                  widget.friend1avatar,
+                  widget.friend2avatar);
             }
           } else {
             return FractionallySizedBox(
@@ -149,10 +157,12 @@ class fCard extends StatelessWidget {
   final friendFullname;
   final fullname;
   final status;
+  final friend1avatar;
+  final friend2avatar;
 
 
   fCard(this.username, this.friendUsername, this.friendFullname, this.fullname,
-      this.status);
+      this.status, this.friend1avatar, this.friend2avatar);
 
   @override
   Widget build(BuildContext context) {
@@ -232,7 +242,7 @@ class fCard extends StatelessWidget {
                         textColor: Colors.white,
                         onPressed: () async {
                           await send(username, fullname, friendUsername,
-                              friendFullname);
+                              friendFullname, friend1avatar, friend2avatar);
                           Navigator.of(context).pop();
                         })
               ],
@@ -240,7 +250,7 @@ class fCard extends StatelessWidget {
   }
 
   Future send(String friend1, String friend1name, String friend2,
-  String friend2name) async {
+  String friend2name, String friend1avatar, String friend2avatar) async {
   /* Function to sen friend requests which creates a doc
     in FriendPair collection
      */
@@ -249,16 +259,17 @@ class fCard extends StatelessWidget {
       .add({
   'friend1': friend1,
   'friend1name': friend1name,
+    'friend1avatar': friend1avatar,
   'friend2': friend2,
   'friend2name': friend2name,
+    'friend2avatar': friend2avatar,
   'status': 'pending'
   })
       .then((value) => print("User Added"))
       .catchError((error) => print("Failed to add user: $error"));
   }
 
-  Future unFriend(String friend1, String friend2
-      ) async {
+  Future unFriend(String friend1, String friend2) async {
     /* Function to sen friend requests which creates a doc
     in FriendPair collection
      */

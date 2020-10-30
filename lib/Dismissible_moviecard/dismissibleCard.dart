@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'movieCard.dart';
 import '../Data_Structures/dataStruct.dart';
@@ -36,16 +37,18 @@ class dismissibleCardState extends State<dismissibleCard> with TickerProviderSta
   Animation<double> _animation;
 
 
+
+
   @override
   void initState() {
     _controller = AnimationController(
-      duration: const Duration(seconds:1),
+      duration: const Duration(milliseconds: 800),
       lowerBound: 0.6,
       vsync: this,
     )..animateTo(1);
     _animation = CurvedAnimation(
       parent: _controller,
-      curve: Curves.fastOutSlowIn,
+      curve: Curves.bounceOut,
     );
     super.initState();
 
@@ -63,9 +66,10 @@ class dismissibleCardState extends State<dismissibleCard> with TickerProviderSta
   Widget build(BuildContext context) {
     //final title = 'Dismissing Items';
     _controller.forward();
-   print(index);
+  // print(index);
 
-    return Directionality(
+    return
+      Directionality(
       textDirection: TextDirection.ltr,
 
       //child:Expanded(
@@ -75,7 +79,7 @@ class dismissibleCardState extends State<dismissibleCard> with TickerProviderSta
               alignment: Alignment(-0.9, -0.5),
               child: Icon(
                 Icons.favorite,
-                color: Colors.green,
+                color: Colors.purple,
                 size: 50,
               )),
           secondaryBackground: Container(
@@ -107,15 +111,18 @@ class dismissibleCardState extends State<dismissibleCard> with TickerProviderSta
 
        if(widget.gameActive == 'yes'){
          if(direction == DismissDirection.endToStart ){
-           print('disliked');
+           //print('disliked');
            selectionArray.add(0);
          }
          if(direction == DismissDirection.startToEnd){
-           print('Liked');
+           //print('Liked');
            selectionArray.add(1);
          }
          updateMovieSelection(widget.creator, widget.username, selectionArray);
           }
+
+
+      /* SystemSound.play(SystemSoundType.click);*/
 
             setState(() {
           _controller.reset();

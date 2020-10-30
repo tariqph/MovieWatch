@@ -1,4 +1,6 @@
 
+import 'package:flutter/material.dart';
+
 class MovieData {
   var title;
   var dur;
@@ -15,9 +17,13 @@ class MovieData {
 }
 
 class UserData{
-  var fullname, email, username;
+  var fullname, email, username, avatar;
 
-  UserData(this.fullname, this.email, this.username);
+  UserData(this.fullname, this.email, this.username, this.avatar);
 
 
 }
+
+Color baseColor = Colors.red[50];
+
+//String avatarId;
