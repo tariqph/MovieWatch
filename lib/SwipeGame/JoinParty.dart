@@ -627,15 +627,22 @@ class PartyCardState extends State<PartyCard> {
 
                   //color: Colors.red,
                   child: Card(
-                      //color: Colors.green[300],
+                      color: Color.fromRGBO(0, 152, 191, 1),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                       elevation: 2,
                       child: Center(
-                        child: Text(
-                          "You've been Booted",
-                          style: TextStyle(fontSize: 30),
+                        child: Column(
+                          children: [
+                            SizedBox(height: 100,),
+                            Image.asset('assets/images/kicked.png'),
+                            SizedBox(height: 50,),
+                            Text(
+                              "You've been Booted",
+                              style: TextStyle(fontSize: 30),
+                            ),
+                          ],
                         ),
                       )));
             }
@@ -652,9 +659,16 @@ class PartyCardState extends State<PartyCard> {
                     ),
                     elevation: 2,
                     child: Center(
-                      child: Text(
-                        "Party Cancelled",
-                        style: TextStyle(fontSize: 30),
+                      child: Column(
+                        children: [
+                          SizedBox(height: 100,),
+                          Image.asset('assets/images/cancelled.png'),
+                          SizedBox(height: 50,),
+                          Text(
+                            "Party Cancelled",
+                            style: TextStyle(fontSize: 30),
+                          ),
+                        ],
                       ),
                     )));
           }

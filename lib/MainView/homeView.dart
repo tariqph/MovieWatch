@@ -4,7 +4,6 @@ import 'package:watchmovie/Data_Structures/globals.dart';
 import '../Data_Structures/dataStruct.dart';
 import 'CustomScaffold.dart';
 import 'dart:core';
-import 'package:watchmovie/Data_Structures/globals.dart' as globals;
 
 
 // ignore: camel_case_types

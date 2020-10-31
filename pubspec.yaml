@@ -57,9 +57,12 @@ flutter:
    - assets/images/netflix.png
    - assets/images/hotstar.png
    - assets/images/primevideo.png
+   - assets/images/kicked.png
    - assets/images/avatar.png
    - assets/images/placeholder.png
+   - assets/images/cancelled.png
    - assets/images/match.png
+   - assets/images/friend.png
    - assets/images/avatars/av1.png
    - assets/images/avatars/av2.png
    - assets/images/avatars/av3.png

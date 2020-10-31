@@ -132,6 +132,7 @@ class customTile extends StatelessWidget {
                   userData.avatar, friendAvatar);
 
 
+
                 }
 
               /* trailing: RaisedButton(
